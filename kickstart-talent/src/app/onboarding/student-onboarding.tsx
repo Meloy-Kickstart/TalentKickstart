@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { completeOnboarding } from "@/lib/actions/student"
 import { Button } from "@/components/ui/button"
@@ -44,7 +45,7 @@ interface StudentOnboardingProps {
 }
 
 const JOB_FUNCTIONS = [
-  // Engineering & Technical
+  // Engineering & Technical (Software)
   { value: 'frontend', label: 'Frontend Engineering', category: 'tech' },
   { value: 'backend', label: 'Backend Engineering', category: 'tech' },
   { value: 'fullstack', label: 'Full Stack Engineering', category: 'tech' },
@@ -53,21 +54,33 @@ const JOB_FUNCTIONS = [
   { value: 'ml', label: 'Machine Learning / AI', category: 'tech' },
   { value: 'data', label: 'Data Science / Analytics', category: 'tech' },
   { value: 'security', label: 'Security Engineering', category: 'tech' },
-  
+
+  // Engineering & Technical (Traditional)
+  { value: 'mechanical', label: 'Mechanical Engineering', category: 'tech' },
+  { value: 'electrical', label: 'Electrical Engineering', category: 'tech' },
+  { value: 'hardware', label: 'Hardware Engineering', category: 'tech' },
+  { value: 'civil', label: 'Civil Engineering', category: 'tech' },
+  { value: 'aerospace', label: 'Aerospace Engineering', category: 'tech' },
+  { value: 'biomedical', label: 'Biomedical Engineering', category: 'tech' },
+
   // Product & Design
   { value: 'design', label: 'Product Design / UX', category: 'product' },
   { value: 'pm', label: 'Product Management', category: 'product' },
   { value: 'research', label: 'User Research', category: 'product' },
-  
+
   // Business & Operations
   { value: 'marketing', label: 'Marketing / Growth', category: 'business' },
   { value: 'sales', label: 'Sales / Business Development', category: 'business' },
   { value: 'finance', label: 'Finance / Accounting', category: 'business' },
+  { value: 'investment_banking', label: 'Investment Banking', category: 'business' },
+  { value: 'vc_pe', label: 'Venture Capital / Private Equity', category: 'business' },
+  { value: 'consulting', label: 'Management Consulting', category: 'business' },
   { value: 'operations', label: 'Operations / Strategy', category: 'business' },
+  { value: 'supply_chain', label: 'Supply Chain / Logistics', category: 'business' },
   { value: 'hr', label: 'People / HR', category: 'business' },
   { value: 'legal', label: 'Legal / Compliance', category: 'business' },
   { value: 'customer_success', label: 'Customer Success / Support', category: 'business' },
-  
+
   // Creative & Content
   { value: 'content', label: 'Content / Copywriting', category: 'creative' },
   { value: 'social_media', label: 'Social Media Management', category: 'creative' },
@@ -92,34 +105,70 @@ const STEPS = [
   { id: 6, title: 'About You', icon: User },
 ]
 
-export function StudentOnboarding({ skills }: StudentOnboardingProps) {
+const STARTUP_QUICK_PICKS = [
+  // Business & Sales
+  { name: 'Growth Hacking', category: 'business' },
+  { name: 'B2B Sales', category: 'business' },
+  { name: 'Pitching', category: 'business' },
+  { name: 'Financial Modeling', category: 'business' },
+  { name: 'Market Analysis', category: 'business' },
+  { name: 'CRM Management', category: 'business' },
+  { name: 'Viral Marketing', category: 'business' },
+
+  // Tech & Engineering (Next-gen)
+  { name: 'Prompt Engineering', category: 'tech' },
+  { name: 'LLM Integration', category: 'tech' },
+  { name: 'Cloud Native', category: 'tech' },
+  { name: 'No-Code (Webflow/Bubble)', category: 'tech' },
+  { name: 'Zapier Automation', category: 'tech' },
+  { name: 'Data Visualization', category: 'tech' },
+  { name: 'Security Auditing', category: 'tech' },
+
+  // Design & Creative
+  { name: 'Product Design', category: 'creative' },
+  { name: 'Branding', category: 'creative' },
+  { name: 'Motion Graphics', category: 'creative' },
+  { name: 'Content Strategy', category: 'creative' },
+  { name: 'Video Production', category: 'creative' },
+
+  // High-Performance Work
+  { name: 'Agile Management', category: 'soft' },
+  { name: 'Public Speaking', category: 'soft' },
+  { name: 'Rapid Prototyping', category: 'soft' },
+  { name: 'Team Building', category: 'soft' },
+  { name: 'Strategic Planning', category: 'soft' },
+]
+
+export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingProps) {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [skills, setSkills] = useState(initialSkills)
 
   // Form state
+  // ... (no changes to formData structure)
   const [formData, setFormData] = useState({
     // Basic Info
     fullName: '',
     phone: '',
     linkedinUrl: '',
     location: '',
-    
+
     // Education
     major: '',
     graduationYear: new Date().getFullYear() + 1,
-    
+
     // Preferences
     willingToRelocate: false,
     requiresSponsorship: false,
     preferredCompanySizes: [] as string[],
     jobFunctions: [] as string[],
     interestedRoles: [] as string[],
-    
+
     // Skills
     selectedSkills: [] as string[],
-    
+
     // Experience
     experiences: [] as {
       companyName: string
@@ -129,13 +178,15 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
       endDate: string
       isCurrent: boolean
     }[],
-    
+
     // About You
     headline: '',
     githubUrl: '',
     lookingFor: '',
     proudProject: '',
   })
+
+  const [skillSearch, setSkillSearch] = useState('')
 
   const [newExperience, setNewExperience] = useState({
     companyName: '',
@@ -161,6 +212,23 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
         return { ...prev, [field]: [...arr, value] }
       }
     })
+  }
+
+  const addCustomSkill = (name: string) => {
+    if (!name.trim()) return
+    const exists = skills.find(s => s.name.toLowerCase() === name.toLowerCase())
+    if (exists) {
+      if (!formData.selectedSkills.includes(exists.id)) {
+        toggleArrayItem('selectedSkills', exists.id)
+      }
+    } else {
+      const customId = `custom:${name.trim()}`
+      if (!formData.selectedSkills.includes(customId)) {
+        toggleArrayItem('selectedSkills', customId)
+        setSkills(prev => [...prev, { id: customId, name: name.trim(), category: 'custom' }])
+      }
+    }
+    setSkillSearch('')
   }
 
   const addExperience = () => {
@@ -244,53 +312,77 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
     }
   }
 
+  const isCSMajor = (major: string) => {
+    if (!major) return false
+    const csTerms = ['computer', 'software', 'cs', 'cse', 'it', 'information technology', 'cyber', 'data science', 'programming']
+    return csTerms.some(term => major.toLowerCase().includes(term))
+  }
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative overflow-hidden font-sans text-[#1a0a0d]">
+      {/* Ambient Background - Organic Floating Blobs */}
+      <div className="fixed inset-0 w-full h-full pointer-events-none -z-10">
+        <div className="absolute inset-0 bg-tech-grid opacity-30"></div>
+        <div className="absolute top-[-10%] left-[10%] w-[500px] h-[500px] blob-soft rounded-full animate-blob opacity-60"></div>
+        <div className="absolute bottom-[-5%] right-[10%] w-[400px] h-[400px] blob-maroon rounded-full animate-blob animation-delay-2000 opacity-50"></div>
+        <div className="absolute top-[40%] left-[-10%] w-[300px] h-[300px] blob-gold rounded-full animate-blob animation-delay-4000 opacity-30"></div>
+      </div>
+
       {/* Header */}
-      <div className="border-b border-edge bg-card">
+      <div className="sticky top-0 z-50 glass border-b-0 rounded-none bg-white/40">
         <div className="container py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-maroon-800 text-white font-bold text-sm">
-                MK
-              </div>
-              <span className="font-semibold text-foreground">Meloy Kickstart</span>
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="KickStart Talent"
+                width={32}
+                height={32}
+                className="hover:scale-105 transition-transform"
+              />
+              <span className="font-semibold text-[#500000]">KickStart Talent</span>
             </div>
-            <div className="text-sm text-muted">
+            <div className="text-sm text-[#500000]/60 font-medium">
               Step {step} of {STEPS.length}
             </div>
           </div>
-          <Progress value={progress} className="mt-4 h-1" />
+          <Progress value={progress} className="mt-4 h-1 bg-[#500000]/10" />
         </div>
       </div>
 
       {/* Step Indicators */}
-      <div className="border-b border-edge bg-card">
-        <div className="container py-4">
-          <div className="flex justify-between">
+      <div className="border-b border-[#500000]/5 bg-white/20 backdrop-blur-sm">
+        <div className="container py-6">
+          <div className="flex justify-between max-w-4xl mx-auto">
             {STEPS.map((s) => {
               const Icon = s.icon
+              const isActive = step >= s.id
+              const isCurrent = step === s.id
+
               return (
                 <div
                   key={s.id}
                   className={cn(
-                    "flex flex-col items-center gap-1",
-                    step >= s.id ? "text-foreground" : "text-dim"
+                    "flex flex-col items-center gap-2 transition-all duration-300",
+                    isActive ? "text-[#500000]" : "text-[#500000]/30"
                   )}
                 >
                   <div
                     className={cn(
-                      "flex h-10 w-10 items-center justify-center rounded-full border-2 transition-colors",
-                      step > s.id
-                        ? "border-green-500 bg-green-500 text-white"
-                        : step === s.id
-                        ? "border-maroon-700 bg-maroon-700 text-white"
-                        : "border-edge"
+                      "flex h-10 w-10 items-center justify-center rounded-2xl border transition-all duration-300 shadow-sm",
+                      isCurrent
+                        ? "border-[#500000] bg-[#500000] text-white scale-110 shadow-lg shadow-[#500000]/20"
+                        : isActive
+                          ? "border-[#500000]/30 bg-[#500000]/10 text-[#500000]"
+                          : "border-[#500000]/10 bg-white/40"
                     )}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
-                  <span className="text-xs font-medium hidden sm:block">{s.title}</span>
+                  <span className={cn(
+                    "text-xs font-medium hidden sm:block",
+                    isCurrent ? "font-bold" : ""
+                  )}>{s.title}</span>
                 </div>
               )
             })}
@@ -299,10 +391,10 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
       </div>
 
       {/* Content */}
-      <div className="container py-8">
-        <div className="max-w-2xl mx-auto">
+      <div className="container py-12 pb-24">
+        <div className="max-w-3xl mx-auto glass-panel p-8 md:p-12 relative">
           {error && (
-            <div className="mb-6 rounded-xl bg-red-950/30 border border-red-900/50 p-4 text-sm text-red-400">
+            <div className="mb-8 rounded-xl bg-red-500/10 border border-red-500/20 p-4 text-sm text-red-600">
               {error}
             </div>
           )}
@@ -317,10 +409,10 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
             >
               {/* Step 1: Basic Info */}
               {step === 1 && (
-                <div className="space-y-6">
-                  <div>
-                    <h1 className="text-2xl font-bold">Let&apos;s start with the basics</h1>
-                    <p className="text-muted mt-1">Tell us a bit about yourself</p>
+                <div className="space-y-8">
+                  <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-[#1a0a0d] mb-2">Let&apos;s start with the basics</h1>
+                    <p className="text-[#500000]/60">Tell us a bit about yourself</p>
                   </div>
 
                   <div className="space-y-4">
@@ -455,7 +547,7 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                   <div className="space-y-6">
                     <div className="space-y-4">
                       <Label>What job functions interest you? * (Select all that apply)</Label>
-                      
+
                       {/* Engineering & Technical */}
                       <div className="space-y-2">
                         <h4 className="text-sm font-medium text-muted">Engineering & Technical</h4>
@@ -466,20 +558,20 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                               type="button"
                               onClick={() => toggleArrayItem('jobFunctions', func.value)}
                               className={cn(
-                                "flex items-center gap-2 rounded-xl border-2 p-3 text-left text-sm transition-colors",
+                                "flex items-center gap-3 rounded-xl border p-4 text-left text-sm transition-all duration-200",
                                 formData.jobFunctions.includes(func.value)
-                                  ? "border-maroon-700 bg-maroon-950"
-                                  : "border-edge hover:border-muted"
+                                  ? "border-[#500000] bg-[#500000]/5 shadow-md shadow-[#500000]/5"
+                                  : "border-[#500000]/10 hover:border-[#500000]/30 hover:bg-white/50 glass"
                               )}
                             >
                               <div className={cn(
-                                "h-4 w-4 rounded-full border-2 flex items-center justify-center",
+                                "h-5 w-5 rounded-full border flex items-center justify-center transition-colors",
                                 formData.jobFunctions.includes(func.value)
-                                  ? "border-maroon-700 bg-maroon-700"
-                                  : "border-dim"
+                                  ? "border-[#500000] bg-[#500000]"
+                                  : "border-[#500000]/30"
                               )}>
                                 {formData.jobFunctions.includes(func.value) && (
-                                  <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                                  <div className="h-2 w-2 rounded-full bg-white" />
                                 )}
                               </div>
                               {func.label}
@@ -487,7 +579,7 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                           ))}
                         </div>
                       </div>
-                      
+
                       {/* Product & Design */}
                       <div className="space-y-2">
                         <h4 className="text-sm font-medium text-muted">Product & Design</h4>
@@ -498,20 +590,20 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                               type="button"
                               onClick={() => toggleArrayItem('jobFunctions', func.value)}
                               className={cn(
-                                "flex items-center gap-2 rounded-xl border-2 p-3 text-left text-sm transition-colors",
+                                "flex items-center gap-3 rounded-xl border p-4 text-left text-sm transition-all duration-200",
                                 formData.jobFunctions.includes(func.value)
-                                  ? "border-maroon-700 bg-maroon-950"
-                                  : "border-edge hover:border-muted"
+                                  ? "border-[#500000] bg-[#500000]/5 shadow-md shadow-[#500000]/5"
+                                  : "border-[#500000]/10 hover:border-[#500000]/30 hover:bg-white/50 glass"
                               )}
                             >
                               <div className={cn(
-                                "h-4 w-4 rounded-full border-2 flex items-center justify-center",
+                                "h-5 w-5 rounded-full border flex items-center justify-center transition-colors",
                                 formData.jobFunctions.includes(func.value)
-                                  ? "border-maroon-700 bg-maroon-700"
-                                  : "border-dim"
+                                  ? "border-[#500000] bg-[#500000]"
+                                  : "border-[#500000]/30"
                               )}>
                                 {formData.jobFunctions.includes(func.value) && (
-                                  <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                                  <div className="h-2 w-2 rounded-full bg-white" />
                                 )}
                               </div>
                               {func.label}
@@ -519,7 +611,7 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                           ))}
                         </div>
                       </div>
-                      
+
                       {/* Business & Operations */}
                       <div className="space-y-2">
                         <h4 className="text-sm font-medium text-muted">Business & Operations</h4>
@@ -530,20 +622,20 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                               type="button"
                               onClick={() => toggleArrayItem('jobFunctions', func.value)}
                               className={cn(
-                                "flex items-center gap-2 rounded-xl border-2 p-3 text-left text-sm transition-colors",
+                                "flex items-center gap-3 rounded-xl border p-4 text-left text-sm transition-all duration-200",
                                 formData.jobFunctions.includes(func.value)
-                                  ? "border-maroon-700 bg-maroon-950"
-                                  : "border-edge hover:border-muted"
+                                  ? "border-[#500000] bg-[#500000]/5 shadow-md shadow-[#500000]/5"
+                                  : "border-[#500000]/10 hover:border-[#500000]/30 hover:bg-white/50 glass"
                               )}
                             >
                               <div className={cn(
-                                "h-4 w-4 rounded-full border-2 flex items-center justify-center",
+                                "h-5 w-5 rounded-full border flex items-center justify-center transition-colors",
                                 formData.jobFunctions.includes(func.value)
-                                  ? "border-maroon-700 bg-maroon-700"
-                                  : "border-dim"
+                                  ? "border-[#500000] bg-[#500000]"
+                                  : "border-[#500000]/30"
                               )}>
                                 {formData.jobFunctions.includes(func.value) && (
-                                  <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                                  <div className="h-2 w-2 rounded-full bg-white" />
                                 )}
                               </div>
                               {func.label}
@@ -551,7 +643,7 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                           ))}
                         </div>
                       </div>
-                      
+
                       {/* Creative & Content */}
                       <div className="space-y-2">
                         <h4 className="text-sm font-medium text-muted">Creative & Content</h4>
@@ -562,20 +654,20 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                               type="button"
                               onClick={() => toggleArrayItem('jobFunctions', func.value)}
                               className={cn(
-                                "flex items-center gap-2 rounded-xl border-2 p-3 text-left text-sm transition-colors",
+                                "flex items-center gap-3 rounded-xl border p-4 text-left text-sm transition-all duration-200",
                                 formData.jobFunctions.includes(func.value)
-                                  ? "border-maroon-700 bg-maroon-950"
-                                  : "border-edge hover:border-muted"
+                                  ? "border-[#500000] bg-[#500000]/5 shadow-md shadow-[#500000]/5"
+                                  : "border-[#500000]/10 hover:border-[#500000]/30 hover:bg-white/50 glass"
                               )}
                             >
                               <div className={cn(
-                                "h-4 w-4 rounded-full border-2 flex items-center justify-center",
+                                "h-5 w-5 rounded-full border flex items-center justify-center transition-colors",
                                 formData.jobFunctions.includes(func.value)
-                                  ? "border-maroon-700 bg-maroon-700"
-                                  : "border-dim"
+                                  ? "border-[#500000] bg-[#500000]"
+                                  : "border-[#500000]/30"
                               )}>
                                 {formData.jobFunctions.includes(func.value) && (
-                                  <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                                  <div className="h-2 w-2 rounded-full bg-white" />
                                 )}
                               </div>
                               {func.label}
@@ -589,23 +681,31 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                       <Label>What size company would you like to work at?</Label>
                       <div className="space-y-2">
                         {COMPANY_SIZES.map((size) => (
-                          <button
+                          <div
                             key={size.value}
-                            type="button"
+                            role="button"
+                            tabIndex={0}
                             onClick={() => toggleArrayItem('preferredCompanySizes', size.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault()
+                                toggleArrayItem('preferredCompanySizes', size.value)
+                              }
+                            }}
                             className={cn(
-                              "w-full flex items-center gap-3 rounded-xl border-2 p-3 text-left text-sm transition-colors",
+                              "w-full flex items-center gap-3 rounded-xl border p-4 text-left text-sm transition-all duration-200 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#500000] focus-visible:ring-offset-2",
                               formData.preferredCompanySizes.includes(size.value)
-                                ? "border-maroon-700 bg-maroon-950"
-                                : "border-edge hover:border-muted"
+                                ? "border-[#500000] bg-[#500000]/5"
+                                : "border-[#500000]/10 hover:border-[#500000]/30 hover:bg-white/50 glass"
                             )}
                           >
                             <Checkbox
                               checked={formData.preferredCompanySizes.includes(size.value)}
+                              onCheckedChange={() => toggleArrayItem('preferredCompanySizes', size.value)}
                               className="pointer-events-none"
                             />
                             {size.label}
-                          </button>
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -619,7 +719,7 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                   <div>
                     <h1 className="text-2xl font-bold">Your Skills</h1>
                     <p className="text-muted mt-1">
-                      Select up to 10 skills that best represent your expertise (minimum 3)
+                      Pick your top 10 strongest skills (minimum 3)
                     </p>
                   </div>
 
@@ -629,50 +729,167 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                         {formData.selectedSkills.length} / 10 skills selected
                       </span>
                       {formData.selectedSkills.length < 3 && (
-                        <span className="text-maroon-400">Select at least 3</span>
+                        <span className="text-[#500000]/60">Select {3 - formData.selectedSkills.length} more to continue</span>
                       )}
                     </div>
 
-                    {['language', 'framework', 'tool', 'business', 'soft'].map((category) => {
-                      const categorySkills = skills.filter(s => s.category === category)
-                      if (categorySkills.length === 0) return null
-                      
-                      return (
-                        <div key={category} className="space-y-2">
-                          <h3 className="font-medium capitalize">
-                            {category === 'language' ? 'Programming Languages' : 
-                             category === 'framework' ? 'Frameworks & Libraries' : 
-                             category === 'tool' ? 'Tools & Technologies' :
-                             category === 'business' ? 'Business & Marketing' :
-                             'Soft Skills'}
-                          </h3>
-                          <div className="flex flex-wrap gap-2">
-                            {categorySkills.map((skill) => (
-                              <button
-                                key={skill.id}
-                                type="button"
-                                disabled={
-                                  formData.selectedSkills.length >= 10 && 
-                                  !formData.selectedSkills.includes(skill.id)
-                                }
-                                onClick={() => toggleArrayItem('selectedSkills', skill.id)}
-                                className={cn(
-                                  "rounded-full px-3 py-1.5 text-sm transition-colors",
-                                  formData.selectedSkills.includes(skill.id)
-                                    ? "bg-maroon-800 text-white"
-                                    : "bg-card-hover text-muted hover:bg-elevated",
-                                  formData.selectedSkills.length >= 10 && 
-                                  !formData.selectedSkills.includes(skill.id) &&
-                                  "opacity-50 cursor-not-allowed"
-                                )}
-                              >
-                                {skill.name}
-                              </button>
-                            ))}
-                          </div>
+                    {/* Selected Skills Pills */}
+                    {formData.selectedSkills.length > 0 && (
+                      <div className="flex flex-wrap gap-2 p-4 rounded-2xl bg-[#500000]/5 border border-[#500000]/10">
+                        {formData.selectedSkills.map(skillId => {
+                          const skill = skills.find(s => s.id === skillId)
+                          if (!skill) return null
+                          return (
+                            <button
+                              key={skill.id}
+                              onClick={() => toggleArrayItem('selectedSkills', skill.id)}
+                              className="group flex items-center gap-1.5 rounded-full bg-[#500000] px-3 py-1.5 text-xs font-medium text-white shadow-sm transition-all hover:bg-[#700000]"
+                            >
+                              {skill.name}
+                              <X className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
+
+                    {isCSMajor(formData.major) ? (
+                      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
+                        {['language', 'framework', 'tool', 'business', 'soft'].map((category) => {
+                          const categorySkills = skills.filter(s => s.category === category)
+                          if (categorySkills.length === 0) return null
+
+                          return (
+                            <div key={category} className="space-y-2">
+                              <h3 className="text-xs font-bold uppercase tracking-wider text-[#500000]/40 px-1">
+                                {category === 'language' ? 'Programming Languages' :
+                                  category === 'framework' ? 'Frameworks & Libraries' :
+                                    category === 'tool' ? 'Tools & Technologies' :
+                                      category === 'business' ? 'Business & Marketing' :
+                                        'Soft Skills'}
+                              </h3>
+                              <div className="flex flex-wrap gap-2">
+                                {categorySkills.map((skill) => (
+                                  <button
+                                    key={skill.id}
+                                    type="button"
+                                    disabled={
+                                      formData.selectedSkills.length >= 10 &&
+                                      !formData.selectedSkills.includes(skill.id)
+                                    }
+                                    onClick={() => toggleArrayItem('selectedSkills', skill.id)}
+                                    className={cn(
+                                      "rounded-xl px-4 py-2 text-sm transition-all duration-200 border",
+                                      formData.selectedSkills.includes(skill.id)
+                                        ? "bg-[#500000] text-white border-[#500000] shadow-md shadow-[#500000]/20"
+                                        : "bg-white/40 text-[#500000]/70 border-[#500000]/10 hover:border-[#500000]/30 hover:bg-white/60",
+                                      formData.selectedSkills.length >= 10 &&
+                                      !formData.selectedSkills.includes(skill.id) &&
+                                      "opacity-30 grayscale cursor-not-allowed"
+                                    )}
+                                  >
+                                    {skill.name}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    ) : (
+                      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="relative">
+                          <Input
+                            placeholder="Search or add a custom skill (e.g. Graphic Design, Pitching...)"
+                            value={skillSearch}
+                            onChange={(e) => setSkillSearch(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault()
+                                addCustomSkill(skillSearch)
+                              }
+                            }}
+                            className="bg-white/40 border-[#500000]/10 focus:border-[#500000]/30 h-14 pl-12 text-lg rounded-2xl"
+                            disabled={formData.selectedSkills.length >= 10}
+                          />
+                          <Code className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-[#500000]/30" />
+                          {skillSearch && (
+                            <button
+                              type="button"
+                              onClick={() => addCustomSkill(skillSearch)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#500000] text-white px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-[#700000] transition-colors"
+                            >
+                              Add Custom
+                            </button>
+                          )}
                         </div>
-                      )
-                    })}
+
+                        {/* Quick Picks / Filtered Results */}
+                        <div className="space-y-6">
+                          {skillSearch === '' ? (
+                            <div className="space-y-4">
+                              <h3 className="text-sm font-bold uppercase tracking-wider text-[#500000]/40 px-1">Startup Quick Picks</h3>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                {STARTUP_QUICK_PICKS.filter(pick =>
+                                  !formData.selectedSkills.some(id =>
+                                    (skills.find(s => s.id === id)?.name || id.replace('custom:', '')).toLowerCase() === pick.name.toLowerCase()
+                                  )
+                                ).slice(0, 15).map((pick) => (
+                                  <button
+                                    key={pick.name}
+                                    type="button"
+                                    onClick={() => addCustomSkill(pick.name)}
+                                    className="flex items-center justify-between p-3 rounded-xl border border-[#500000]/5 bg-white/20 hover:bg-white/60 hover:border-[#500000]/20 transition-all text-left group"
+                                  >
+                                    <span className="text-sm font-medium text-[#500000]/80">{pick.name}</span>
+                                    <Plus className="h-4 w-4 text-[#500000]/30 group-hover:text-[#500000] transition-colors" />
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                              {skills
+                                .filter(s =>
+                                  !formData.selectedSkills.includes(s.id) &&
+                                  s.name.toLowerCase().includes(skillSearch.toLowerCase())
+                                )
+                                .slice(0, 20)
+                                .map((skill) => (
+                                  <button
+                                    key={skill.id}
+                                    type="button"
+                                    onClick={() => {
+                                      toggleArrayItem('selectedSkills', skill.id)
+                                      setSkillSearch('')
+                                    }}
+                                    className="flex items-center justify-between p-4 rounded-xl border border-[#500000]/5 bg-white/20 hover:bg-white/60 hover:border-[#500000]/20 transition-all text-left group w-full"
+                                  >
+                                    <span className="text-base font-medium text-[#500000]/80">{skill.name}</span>
+                                    <Plus className="h-5 w-5 text-[#500000]/30 group-hover:text-[#500000] transition-colors" />
+                                  </button>
+                                ))}
+
+                              {!skills.some(s => s.name.toLowerCase() === skillSearch.toLowerCase()) && (
+                                <button
+                                  type="button"
+                                  onClick={() => addCustomSkill(skillSearch)}
+                                  className="flex items-center gap-3 p-4 rounded-xl border border-dashed border-[#500000]/20 bg-[#500000]/5 hover:bg-[#500000]/10 transition-all text-left w-full group"
+                                >
+                                  <div className="h-10 w-10 rounded-full bg-[#500000]/10 flex items-center justify-center text-[#500000]">
+                                    <Plus className="h-5 w-5" />
+                                  </div>
+                                  <div>
+                                    <div className="font-semibold text-[#500000]">Add &quot;{skillSearch}&quot;</div>
+                                    <div className="text-xs text-[#500000]/60">Add this as a custom skill to your profile</div>
+                                  </div>
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -788,9 +1005,10 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
 
                     <Button
                       type="button"
-                      variant="secondary"
+                      variant="ghost"
                       onClick={addExperience}
                       disabled={!newExperience.companyName || !newExperience.title}
+                      className="w-full border border-dashed border-[#500000]/20 text-[#500000]/60 hover:text-[#500000] hover:bg-[#500000]/5 hover:border-[#500000]/40"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Add Experience
@@ -891,6 +1109,7 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                 type="button"
                 onClick={() => setStep(s => s + 1)}
                 disabled={!canProceed()}
+                className="btn-maroon-glass px-8"
               >
                 Continue
                 <ArrowRight className="h-4 w-4 ml-2" />
@@ -900,7 +1119,7 @@ export function StudentOnboarding({ skills }: StudentOnboardingProps) {
                 type="button"
                 onClick={handleSubmit}
                 disabled={!canProceed() || loading}
-                variant="orange"
+                className="btn-maroon-glass px-8 w-full sm:w-auto"
               >
                 {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Complete Profile

@@ -19,6 +19,21 @@
   --glass-highlight: rgba(255, 255, 255, 0.9);
   --glass-refraction: rgba(200, 220, 255, 0.08);
 
+  /* UI Component Colors */
+  --color-card: rgba(255, 255, 255, 0.9);
+  --color-card-hover: rgba(255, 255, 255, 0.95);
+  --color-popover: rgba(255, 255, 255, 0.95);
+  --color-popover-foreground: #1a0a0d;
+  --color-start: #ff0000;
+
+  --color-muted: rgba(80, 0, 0, 0.05);
+  --color-muted-foreground: rgba(80, 0, 0, 0.6);
+  --color-border: rgba(80, 0, 0, 0.1);
+  --color-input: rgba(255, 255, 255, 0.6);
+  --color-ring: rgba(80, 0, 0, 0.2);
+  --color-edge: rgba(255, 255, 255, 0.8);
+  --color-dim: rgba(80, 0, 0, 0.4);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

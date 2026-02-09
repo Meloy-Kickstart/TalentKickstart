@@ -1,11 +1,11 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function updateProfile(formData: FormData) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { error: 'Not authenticated' }
@@ -36,7 +36,7 @@ export async function updateProfile(formData: FormData) {
 
 export async function updateStudentProfile(formData: FormData) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { error: 'Not authenticated' }
@@ -89,7 +89,7 @@ export async function updateStudentProfile(formData: FormData) {
 
 export async function updateStudentSkills(skillIds: string[]) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { error: 'Not authenticated' }
@@ -121,7 +121,7 @@ export async function updateStudentSkills(skillIds: string[]) {
 
 export async function toggleAvailability() {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { error: 'Not authenticated' }
@@ -148,7 +148,7 @@ export async function toggleAvailability() {
 
 export async function addExperience(formData: FormData) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { error: 'Not authenticated' }
@@ -183,7 +183,7 @@ export async function addExperience(formData: FormData) {
 
 export async function deleteExperience(experienceId: string) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { error: 'Not authenticated' }
@@ -234,7 +234,7 @@ export async function completeOnboarding(data: {
   }[]
 }) {
   const supabase = await createClient()
-  
+
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return { error: 'Not authenticated' }
@@ -273,12 +273,49 @@ export async function completeOnboarding(data: {
   // Update skills
   await supabase.from('student_skills').delete().eq('student_id', user.id)
   if (data.skillIds.length > 0) {
-    await supabase.from('student_skills').insert(
-      data.skillIds.map(skillId => ({
-        student_id: user.id,
-        skill_id: skillId,
-      })) as any
-    )
+    const adminSupabase = createAdminClient()
+
+    // Process skills: some might be IDs, some might be "custom:name"
+    const finalSkillIds: string[] = []
+
+    for (const id of data.skillIds) {
+      if (id.startsWith('custom:')) {
+        const skillName = id.replace('custom:', '')
+
+        // Try to find if it exists now (another student might have added it)
+        const { data: existingSkill } = await (adminSupabase
+          .from('skills') as any)
+          .select('id')
+          .eq('name', skillName)
+          .single()
+
+        if (existingSkill) {
+          finalSkillIds.push(existingSkill.id)
+        } else {
+          // Insert new skill
+          const { data: newSkill } = await (adminSupabase
+            .from('skills') as any)
+            .insert({ name: skillName, category: 'custom' })
+            .select('id')
+            .single()
+
+          if (newSkill) {
+            finalSkillIds.push(newSkill.id)
+          }
+        }
+      } else {
+        finalSkillIds.push(id)
+      }
+    }
+
+    if (finalSkillIds.length > 0) {
+      await supabase.from('student_skills').insert(
+        finalSkillIds.map(skillId => ({
+          student_id: user.id,
+          skill_id: skillId,
+        })) as any
+      )
+    }
   }
 
   // Insert experiences

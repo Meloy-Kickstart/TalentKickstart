@@ -76,7 +76,7 @@ export default async function HomePage() {
 
       {/* Floating Navbar - Liquid Glass */}
       <nav className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-        <div className="glass px-8 py-4 flex items-center justify-between w-full max-w-5xl animate-float" style={{ animationDuration: '8s' }}>
+        <div className="glass px-8 py-4 flex items-center justify-between w-full max-w-5xl animate-float" style={{ animationDuration: '18s' }}>
           <Link href="/" className="flex items-center gap-3 group">
             <Image
               src="/logo.png"
@@ -111,11 +111,7 @@ export default async function HomePage() {
         <div className="container px-4">
           <div className="max-w-4xl mx-auto text-center">
 
-            {/* Floating pill badge */}
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 glass mb-10 animate-float" style={{ animationDelay: '0.5s' }}>
-              <Cpu className="h-4 w-4 text-[#500000]/70" />
-              <span className="text-sm font-medium text-[#500000]/70">The Future of Aggie Innovation</span>
-            </div>
+
 
             <h1 className="text-5xl md:text-8xl font-bold tracking-tight mb-10 leading-[1.05] text-[#1a0a0d]">
               Build the <br />

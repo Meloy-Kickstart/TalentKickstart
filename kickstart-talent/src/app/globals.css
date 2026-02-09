@@ -1,0 +1,577 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Liquid Glass Theme - Light Mode with Aggie Maroon */
+  --color-background-solid: #f5f0f1;
+  --color-foreground: #1a0a0d;
+
+  /* Aggie Maroon Palette */
+  --color-primary: #500000;
+  --color-primary-light: #732222;
+  --color-primary-dark: #3d0000;
+  --color-secondary: #a50034;
+  --color-accent: #d4a574;
+
+  /* Liquid Glass Colors - Soft & Muted */
+  --glass-tint: rgba(255, 255, 255, 0.6);
+  --glass-edge: rgba(255, 255, 255, 0.8);
+  --glass-shadow: rgba(80, 0, 0, 0.06);
+  --glass-highlight: rgba(255, 255, 255, 0.9);
+  --glass-refraction: rgba(200, 220, 255, 0.08);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer utilities {
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: 1400px;
+  }
+}
+
+/* ========================================
+   LIQUID GLASS ANIMATIONS
+   Slow, organic, flowing motion
+   ======================================== */
+
+@keyframes liquid-flow {
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes glass-shimmer {
+  0% {
+    transform: translateX(-100%) rotate(12deg);
+  }
+
+  100% {
+    transform: translateX(100%) rotate(12deg);
+  }
+}
+
+@keyframes float-gentle {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+@keyframes blob-morph {
+
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: scale(1) rotate(0deg);
+  }
+
+  33% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: scale(1.05) rotate(2deg);
+  }
+
+  66% {
+    border-radius: 40% 60% 30% 70% / 40% 50% 60% 50%;
+    transform: scale(0.98) rotate(-1deg);
+  }
+}
+
+@keyframes liquid-text {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes subtle-pulse {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.02);
+  }
+}
+
+.animate-liquid-flow {
+  animation: liquid-flow 8s ease-in-out infinite;
+  background-size: 200% 200%;
+}
+
+.animate-float {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+.animate-blob {
+  animation: blob-morph 12s ease-in-out infinite;
+}
+
+.animate-liquid-text {
+  background-size: 200% auto;
+  animation: liquid-text 4s ease infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.animation-delay-6000 {
+  animation-delay: 6s;
+}
+
+/* ========================================
+   LIQUID GLASS MATERIAL SYSTEM
+   Translucent, refractive, organic
+   ======================================== */
+
+/* Base Liquid Glass - Semi-transparent with soft refraction */
+.glass {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(245, 248, 255, 0.4) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  box-shadow:
+    /* Outer soft shadow for depth */
+    0 8px 40px rgba(80, 0, 0, 0.05),
+    0 2px 15px rgba(80, 0, 0, 0.03),
+    /* Inner highlight - top edge glow like liquid surface tension */
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(80, 0, 0, 0.02);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Inner refraction layer - subtle light bending */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(200, 220, 255, 0.05) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Flowing highlight - liquid shimmer effect */
+.glass::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.15),
+      transparent);
+  transform: rotate(12deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.glass:hover::after {
+  animation: glass-shimmer 1.5s ease-out;
+  opacity: 1;
+}
+
+/* Premium Glass Panel - More pronounced liquid effect */
+.glass-panel {
+  background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.35) 40%,
+      rgba(250, 252, 255, 0.45) 100%);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-radius: 32px;
+  box-shadow:
+    0 20px 60px rgba(80, 0, 0, 0.06),
+    0 8px 25px rgba(80, 0, 0, 0.04),
+    0 2px 8px rgba(80, 0, 0, 0.02),
+    inset 0 2px 2px rgba(255, 255, 255, 1),
+    inset 0 -2px 4px rgba(200, 220, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Iridescent gradient layer */
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.6) 0%,
+      transparent 40%,
+      rgba(220, 230, 255, 0.1) 60%,
+      rgba(255, 240, 245, 0.08) 100%);
+  pointer-events: none;
+}
+
+/* Maroon-tinted Glass */
+.glass-maroon {
+  background: linear-gradient(135deg,
+      rgba(80, 0, 0, 0.06) 0%,
+      rgba(80, 0, 0, 0.03) 50%,
+      rgba(165, 0, 52, 0.04) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(80, 0, 0, 0.1);
+  border-radius: 24px;
+  box-shadow:
+    0 8px 40px rgba(80, 0, 0, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* Interactive Glass with Smooth Hover */
+.glass-hover {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-hover:hover {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.65) 0%,
+      rgba(255, 255, 255, 0.45) 50%,
+      rgba(250, 252, 255, 0.55) 100%);
+  transform: translateY(-6px);
+  box-shadow:
+    0 25px 70px rgba(80, 0, 0, 0.08),
+    0 12px 35px rgba(80, 0, 0, 0.05),
+    0 4px 12px rgba(80, 0, 0, 0.03),
+    inset 0 2px 2px rgba(255, 255, 255, 1),
+    inset 0 -1px 2px rgba(200, 220, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* ========================================
+   ORGANIC BLOB DECORATIONS
+   Soft, floating, atmospheric
+   ======================================== */
+
+.blob-maroon {
+  background: radial-gradient(ellipse at center,
+      rgba(80, 0, 0, 0.12) 0%,
+      rgba(165, 0, 52, 0.08) 40%,
+      rgba(212, 165, 116, 0.04) 70%,
+      transparent 100%);
+  filter: blur(60px);
+}
+
+.blob-soft {
+  background: radial-gradient(ellipse at center,
+      rgba(200, 220, 255, 0.15) 0%,
+      rgba(255, 240, 250, 0.1) 40%,
+      transparent 70%);
+  filter: blur(80px);
+}
+
+.blob-gold {
+  background: radial-gradient(ellipse at center,
+      rgba(212, 165, 116, 0.15) 0%,
+      rgba(255, 220, 180, 0.08) 50%,
+      transparent 100%);
+  filter: blur(60px);
+}
+
+/* ========================================
+   BACKGROUND PATTERNS
+   ======================================== */
+
+.bg-tech-grid {
+  background-size: 50px 50px;
+  background-image:
+    linear-gradient(to right, rgba(80, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(80, 0, 0, 0.02) 1px, transparent 1px);
+}
+
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(80, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ========================================
+   TEXT EFFECTS - Maroon Gradients
+   ======================================== */
+
+.text-gradient {
+  background: linear-gradient(135deg, #500000 0%, #732222 50%, #500000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #500000 0%, #d4a574 50%, #500000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-liquid {
+  background: linear-gradient(90deg,
+      #500000 20%,
+      #a50034 35%,
+      #732222 50%,
+      #d4a574 65%,
+      #500000 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ========================================
+   BUTTON EFFECTS - Glass Buttons
+   ======================================== */
+
+.btn-glass {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  box-shadow:
+    0 4px 20px rgba(80, 0, 0, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  color: #500000;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 30px rgba(80, 0, 0, 0.08),
+    inset 0 1px 2px rgba(255, 255, 255, 1);
+}
+
+.btn-maroon-glass {
+  background: linear-gradient(135deg,
+      rgba(80, 0, 0, 0.85) 0%,
+      rgba(115, 34, 34, 0.9) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 30px rgba(80, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-maroon-glass:hover {
+  background: linear-gradient(135deg,
+      rgba(115, 34, 34, 0.95) 0%,
+      rgba(80, 0, 0, 1) 100%);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 15px 45px rgba(80, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================
+   CARD EFFECTS - Floating Liquid Panels
+   ======================================== */
+
+.card-liquid {
+  background: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.4) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 28px;
+  box-shadow:
+    0 12px 50px rgba(80, 0, 0, 0.06),
+    0 4px 20px rgba(80, 0, 0, 0.03),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-liquid:hover {
+  transform: translateY(-10px) scale(1.01);
+  box-shadow:
+    0 30px 80px rgba(80, 0, 0, 0.08),
+    0 15px 40px rgba(80, 0, 0, 0.05),
+    inset 0 2px 2px rgba(255, 255, 255, 1);
+}
+
+/* ========================================
+   GLOBAL STYLES
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* Soft, warm light background with subtle gradient */
+  background: linear-gradient(160deg,
+      #faf8f9 0%,
+      #ffffff 30%,
+      #fdf9fa 60%,
+      #f8f5f6 100%);
+  background-attachment: fixed;
+  color: #1a0a0d;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Subtle noise texture for organic feel */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.012;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR - Liquid Feel
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(250, 248, 249, 0.9);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,
+      rgba(80, 0, 0, 0.25) 0%,
+      rgba(115, 34, 34, 0.35) 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(250, 248, 249, 0.9);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg,
+      rgba(80, 0, 0, 0.4) 0%,
+      rgba(115, 34, 34, 0.5) 100%);
+}
+
+/* ========================================
+   SELECTION & FOCUS
+   ======================================== */
+
+::selection {
+  background: rgba(80, 0, 0, 0.15);
+  color: #500000;
+}
+
+*:focus-visible {
+  outline: 2px solid rgba(80, 0, 0, 0.4);
+  outline-offset: 3px;
+}
+
+/* ========================================
+   INPUT STYLES - Glass Inputs
+   ======================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 14px;
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(80, 0, 0, 0.2) !important;
+  box-shadow:
+    0 0 0 4px rgba(80, 0, 0, 0.06),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.liquid-shadow {
+  box-shadow:
+    0 12px 50px rgba(80, 0, 0, 0.06),
+    0 4px 20px rgba(80, 0, 0, 0.04);
+}
+
+.glow-maroon {
+  box-shadow:
+    0 0 30px rgba(80, 0, 0, 0.15),
+    0 0 60px rgba(80, 0, 0, 0.08);
+}
+
+.glass-border {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9);
+}
+
+/* Floating depth layers */
+.depth-1 {
+  transform: translateZ(10px);
+}
+
+.depth-2 {
+  transform: translateZ(20px);
+}
+
+.depth-3 {
+  transform: translateZ(30px);
+}

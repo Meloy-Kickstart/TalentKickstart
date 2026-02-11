@@ -94,7 +94,7 @@ export default async function TalentPage({ searchParams }: TalentPageProps) {
         {/* Header */}
         <div className="max-w-3xl mb-8">
           <h1 className="text-3xl font-bold mb-2 text-foreground">Browse Talent</h1>
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             Discover talented students from Texas A&M who are ready to join your startup.
           </p>
         </div>
@@ -115,7 +115,7 @@ export default async function TalentPage({ searchParams }: TalentPageProps) {
         {/* Popular Skills */}
         {popularSkills && (popularSkills as any).length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
-            <span className="text-sm text-muted mr-2">Popular skills:</span>
+            <span className="text-sm text-muted-foreground mr-2">Popular skills:</span>
             {(popularSkills as any).slice(0, 10).map((skill: any) => (
               <Link
                 key={(skill as any).id}
@@ -135,7 +135,7 @@ export default async function TalentPage({ searchParams }: TalentPageProps) {
         {/* Active Filters */}
         {(search || skillFilter) && (
           <div className="flex items-center gap-2 mb-6">
-            <span className="text-sm text-muted">Active filters:</span>
+            <span className="text-sm text-muted-foreground">Active filters:</span>
             {search && (
               <Badge variant="secondary">"{search}"</Badge>
             )}
@@ -151,7 +151,7 @@ export default async function TalentPage({ searchParams }: TalentPageProps) {
         {/* Results */}
         {students && (students as any).length > 0 ? (
           <>
-            <p className="text-sm text-muted mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {(students as any).length} student{(students as any).length !== 1 ? 's' : ''} available
             </p>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

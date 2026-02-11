@@ -76,7 +76,7 @@ export default async function StudentApplicationsPage() {
       <div className="container py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold">Your Applications</h1>
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             Track the status of your job applications
           </p>
         </div>
@@ -86,25 +86,25 @@ export default async function StudentApplicationsPage() {
           <Card>
             <CardContent className="py-4 text-center">
               <div className="text-2xl font-bold">{applicationsData.length}</div>
-              <p className="text-sm text-muted">Total</p>
+              <p className="text-sm text-muted-foreground">Total</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
               <div className="text-2xl font-bold text-amber-400">{pendingApps.length}</div>
-              <p className="text-sm text-muted">Pending</p>
+              <p className="text-sm text-muted-foreground">Pending</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
               <div className="text-2xl font-bold text-blue-400">{interviewApps.length}</div>
-              <p className="text-sm text-muted">Interview</p>
+              <p className="text-sm text-muted-foreground">Interview</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
               <div className="text-2xl font-bold text-green-400">{acceptedApps.length}</div>
-              <p className="text-sm text-muted">Accepted</p>
+              <p className="text-sm text-muted-foreground">Accepted</p>
             </CardContent>
           </Card>
         </div>
@@ -141,7 +141,7 @@ export default async function StudentApplicationsPage() {
                               <div>
                                 <Link
                                   href={`/roles/${role.id}`}
-                                  className="font-medium hover:text-muted"
+                                  className="font-medium hover:text-muted-foreground"
                                 >
                                   {role.title}
                                 </Link>
@@ -174,7 +174,7 @@ export default async function StudentApplicationsPage() {
             {/* Closed Applications */}
             {closedApps.length > 0 && (
               <div>
-                <h2 className="text-lg font-semibold mb-4 text-muted">Past Applications</h2>
+                <h2 className="text-lg font-semibold mb-4 text-muted-foreground">Past Applications</h2>
                 <div className="space-y-3">
                   {closedApps.map((app: any) => {
                     const appData = app as any
@@ -196,7 +196,7 @@ export default async function StudentApplicationsPage() {
                               </div>
                               <div>
                                 <p className="font-medium">{role.title}</p>
-                                <p className="text-sm text-muted">
+                                <p className="text-sm text-muted-foreground">
                                   {role.startups?.company_name}
                                 </p>
                               </div>

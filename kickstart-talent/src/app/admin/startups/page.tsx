@@ -60,7 +60,7 @@ export default async function AdminStartupsPage() {
       <div className="container py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold">Manage Startups</h1>
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             Review and verify startup accounts
           </p>
         </div>
@@ -89,10 +89,10 @@ export default async function AdminStartupsPage() {
                               <h3 className="font-semibold">{(startup as any).company_name}</h3>
                               <Badge variant="warning">Pending</Badge>
                             </div>
-                            <p className="text-sm text-muted mb-2">
+                            <p className="text-sm text-muted-foreground mb-2">
                               {(contact as any)?.full_name} • {(contact as any)?.email}
                             </p>
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
+                            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                               {(startup as any).industry && <span>{(startup as any).industry}</span>}
                               {(startup as any).stage && (
                                 <span className="capitalize">{(startup as any).stage.replace('_', ' ')}</span>
@@ -117,7 +117,7 @@ export default async function AdminStartupsPage() {
                               )}
                             </div>
                             {(startup as any).description && (
-                              <p className="text-sm text-muted mt-2 line-clamp-2">
+                              <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
                                 {(startup as any).description}
                               </p>
                             )}
@@ -164,7 +164,7 @@ export default async function AdminStartupsPage() {
                               <h3 className="font-medium">{(startup as any).company_name}</h3>
                               <Badge variant="success">Verified</Badge>
                             </div>
-                            <p className="text-sm text-muted">
+                            <p className="text-sm text-muted-foreground">
                               {(contact as any)?.email} • {roleCount} roles
                             </p>
                           </div>

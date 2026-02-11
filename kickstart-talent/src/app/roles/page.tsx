@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { Briefcase, Search, Filter } from 'lucide-react'
+import { RoleFilters } from '@/components/roles/role-filters'
 
 export const dynamic = 'force-dynamic'
 
@@ -36,7 +37,7 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
       .from('saved_roles')
       .select('role_id')
       .eq('student_id', user.id)
-    
+
     savedRoles = (savedData as any)?.map((s: any) => s.role_id) || []
   }
 
@@ -101,7 +102,7 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
         {/* Header */}
         <div className="max-w-3xl mb-8">
           <h1 className="text-3xl font-bold mb-2">Find Your Next Role</h1>
-          <p className="text-muted">
+          <p className="text-black">
             Discover opportunities at innovative startups. All roles are at verified TAMU-affiliated or partner startups.
           </p>
         </div>
@@ -109,7 +110,7 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
         {/* Search & Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <form className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-dim" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               name="q"
               placeholder="Search roles by title, skills, or description..."
@@ -117,31 +118,13 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
               className="pl-10"
             />
           </form>
-          <div className="flex gap-2 flex-wrap">
-            {roleTypes.map((type) => {
-              const isActive = roleType === type
-              const label = type.replace('_', '-')
-              return (
-                <Link
-                  key={type}
-                  href={`/roles${type === roleType ? '' : `?type=${type}`}`}
-                >
-                  <Badge
-                    variant={isActive ? 'default' : 'outline'}
-                    className="cursor-pointer capitalize"
-                  >
-                    {label}
-                  </Badge>
-                </Link>
-              )
-            })}
-          </div>
+          <RoleFilters roleTypes={roleTypes} />
         </div>
 
         {/* Active Filters */}
         {(roleType || location || search) && (
           <div className="flex items-center gap-2 mb-6">
-            <span className="text-sm text-muted">Active filters:</span>
+            <span className="text-sm text-muted-foreground">Active filters:</span>
             {roleType && (
               <Badge variant="secondary" className="capitalize">
                 {roleType.replace('_', ' ')}
@@ -162,7 +145,7 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
         {/* Results */}
         {roles && roles.length > 0 ? (
           <>
-            <p className="text-sm text-muted mb-4">
+            <p className="text-sm text-black mb-4">
               {roles.length} role{roles.length !== 1 ? 's' : ''} found
             </p>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -178,7 +161,7 @@ export default async function RolesPage({ searchParams }: RolesPageProps) {
                 const skills = ((role as any).role_skills as { skills: { id: string; name: string } }[])?.map(
                   rs => rs.skills
                 ) || []
-                
+
                 return (
                   <RoleCard
                     key={(role as any).id}

@@ -16,19 +16,19 @@ export function AvailabilityToggle({ isAvailable: initialValue }: AvailabilityTo
   async function handleToggle() {
     setLoading(true)
     setIsAvailable(!isAvailable)
-    
+
     const result = await toggleAvailability()
-    
+
     if (result?.error) {
       // Revert on error
       setIsAvailable(isAvailable)
     }
-    
+
     setLoading(false)
   }
 
   return (
-    <div className="flex items-center gap-2 px-4 py-2 rounded-xl border border-edge bg-card">
+    <div className="flex items-center gap-2 px-4 py-2 rounded-xl glass">
       <Switch
         id="availability"
         checked={isAvailable}
@@ -39,7 +39,7 @@ export function AvailabilityToggle({ isAvailable: initialValue }: AvailabilityTo
         {isAvailable ? (
           <span className="text-green-400">Open to opportunities</span>
         ) : (
-          <span className="text-muted">Not looking</span>
+          <span className="text-muted-foreground">Not looking</span>
         )}
       </Label>
     </div>

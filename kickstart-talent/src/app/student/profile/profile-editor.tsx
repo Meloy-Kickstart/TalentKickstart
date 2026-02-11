@@ -151,13 +151,13 @@ export function ProfileEditor({
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold">Edit Profile</h1>
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             Update your profile to help startups find you
           </p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted">Available</span>
+            <span className="text-sm text-muted-foreground">Available</span>
             <Switch
               checked={student?.is_available || false}
               onCheckedChange={handleToggleAvailability}
@@ -375,7 +375,7 @@ export function ProfileEditor({
         <CardContent>
           {showSkillPicker ? (
             <div className="space-y-6">
-              <div className="text-sm text-muted">
+              <div className="text-sm text-muted-foreground">
                 {selectedSkills.length}/10 skills selected
               </div>
               {Object.entries(skillsByCategory).map(([category, skills]) => (
@@ -531,7 +531,7 @@ export function ProfileEditor({
                 <div key={exp.id} className="flex items-start justify-between py-4 border-b last:border-0">
                   <div>
                     <h4 className="font-medium">{exp.title}</h4>
-                    <p className="text-sm text-muted">{exp.company}</p>
+                    <p className="text-sm text-muted-foreground">{exp.company}</p>
                     <p className="text-xs text-dim">
                       {new Date(exp.start_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                       {' - '}
@@ -542,7 +542,7 @@ export function ProfileEditor({
                           : 'Present'}
                     </p>
                     {exp.description && (
-                      <p className="text-sm text-muted mt-2">{exp.description}</p>
+                      <p className="text-sm text-muted-foreground mt-2">{exp.description}</p>
                     )}
                   </div>
                   <Button

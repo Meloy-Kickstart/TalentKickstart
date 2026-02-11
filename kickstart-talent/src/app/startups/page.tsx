@@ -95,7 +95,7 @@ export default async function StartupsPage({ searchParams }: StartupsPageProps) 
         {/* Header */}
         <div className="max-w-3xl mb-8">
           <h1 className="text-3xl font-bold mb-2 text-foreground">Browse Startups</h1>
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             Discover innovative startups looking for talented students like you.
           </p>
         </div>
@@ -115,7 +115,7 @@ export default async function StartupsPage({ searchParams }: StartupsPageProps) 
 
         {/* Industry Filters */}
         <div className="flex flex-wrap gap-2 mb-6">
-          <span className="text-sm text-muted mr-2">Industries:</span>
+          <span className="text-sm text-muted-foreground mr-2">Industries:</span>
           {industries.map((industry) => (
             <Link
               key={industry}
@@ -134,7 +134,7 @@ export default async function StartupsPage({ searchParams }: StartupsPageProps) 
         {/* Active Filters */}
         {(search || industryFilter) && (
           <div className="flex items-center gap-2 mb-6">
-            <span className="text-sm text-muted">Active filters:</span>
+            <span className="text-sm text-muted-foreground">Active filters:</span>
             {search && (
               <Badge variant="secondary">"{search}"</Badge>
             )}
@@ -150,7 +150,7 @@ export default async function StartupsPage({ searchParams }: StartupsPageProps) 
         {/* Results */}
         {startups && (startups as any).length > 0 ? (
           <>
-            <p className="text-sm text-muted mb-4">
+            <p className="text-sm text-muted-foreground mb-4">
               {(startups as any).length} startup{(startups as any).length !== 1 ? 's' : ''} found
             </p>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

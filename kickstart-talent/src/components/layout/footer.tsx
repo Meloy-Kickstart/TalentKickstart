@@ -56,11 +56,6 @@ export function Footer() {
                   Post a Role
                 </Link>
               </li>
-              <li>
-                <Link href="/pricing" className="hover:text-[#500000] transition-colors">
-                  Pricing
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -77,16 +72,6 @@ export function Footer() {
                   Contact
                 </Link>
               </li>
-              <li>
-                <Link href="/privacy" className="hover:text-[#500000] transition-colors">
-                  Privacy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="hover:text-[#500000] transition-colors">
-                  Terms
-                </Link>
-              </li>
             </ul>
           </div>
         </div>
@@ -96,7 +81,7 @@ export function Footer() {
             © {new Date().getFullYear()} Meloy Kickstart. All rights reserved.
           </p>
           <p className="text-sm text-[#500000]/50">
-            Made with <span className="text-[#500000]">❤️</span> at Texas A&M University
+            Made at Texas A&M University
           </p>
         </div>
       </div>

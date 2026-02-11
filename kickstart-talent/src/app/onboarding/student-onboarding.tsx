@@ -470,7 +470,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                 <div className="space-y-6">
                   <div>
                     <h1 className="text-2xl font-bold">Education</h1>
-                    <p className="text-muted mt-1">Tell us about your academic background</p>
+                    <p className="text-muted-foreground mt-1">Tell us about your academic background</p>
                   </div>
 
                   <div className="space-y-4">
@@ -504,7 +504,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                     </div>
 
                     <div className="rounded-xl bg-card-hover p-4">
-                      <p className="text-sm text-muted">
+                      <p className="text-sm text-muted-foreground">
                         <span className="font-medium">University:</span> Texas A&M University
                       </p>
                     </div>
@@ -541,7 +541,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                 <div className="space-y-6">
                   <div>
                     <h1 className="text-2xl font-bold">Job Preferences</h1>
-                    <p className="text-muted mt-1">What kind of roles are you interested in?</p>
+                    <p className="text-muted-foreground mt-1">What kind of roles are you interested in?</p>
                   </div>
 
                   <div className="space-y-6">
@@ -550,7 +550,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
 
                       {/* Engineering & Technical */}
                       <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-muted">Engineering & Technical</h4>
+                        <h4 className="text-sm font-medium text-muted-foreground">Engineering & Technical</h4>
                         <div className="grid grid-cols-2 gap-2">
                           {JOB_FUNCTIONS.filter(f => f.category === 'tech').map((func) => (
                             <button
@@ -582,7 +582,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
 
                       {/* Product & Design */}
                       <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-muted">Product & Design</h4>
+                        <h4 className="text-sm font-medium text-muted-foreground">Product & Design</h4>
                         <div className="grid grid-cols-2 gap-2">
                           {JOB_FUNCTIONS.filter(f => f.category === 'product').map((func) => (
                             <button
@@ -614,7 +614,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
 
                       {/* Business & Operations */}
                       <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-muted">Business & Operations</h4>
+                        <h4 className="text-sm font-medium text-muted-foreground">Business & Operations</h4>
                         <div className="grid grid-cols-2 gap-2">
                           {JOB_FUNCTIONS.filter(f => f.category === 'business').map((func) => (
                             <button
@@ -646,7 +646,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
 
                       {/* Creative & Content */}
                       <div className="space-y-2">
-                        <h4 className="text-sm font-medium text-muted">Creative & Content</h4>
+                        <h4 className="text-sm font-medium text-muted-foreground">Creative & Content</h4>
                         <div className="grid grid-cols-2 gap-2">
                           {JOB_FUNCTIONS.filter(f => f.category === 'creative').map((func) => (
                             <button
@@ -718,14 +718,14 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                 <div className="space-y-6">
                   <div>
                     <h1 className="text-2xl font-bold">Your Skills</h1>
-                    <p className="text-muted mt-1">
+                    <p className="text-muted-foreground mt-1">
                       Pick your top 10 strongest skills (minimum 3)
                     </p>
                   </div>
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted">
+                      <span className="text-muted-foreground">
                         {formData.selectedSkills.length} / 10 skills selected
                       </span>
                       {formData.selectedSkills.length < 3 && (
@@ -899,7 +899,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                 <div className="space-y-6">
                   <div>
                     <h1 className="text-2xl font-bold">Work Experience</h1>
-                    <p className="text-muted mt-1">
+                    <p className="text-muted-foreground mt-1">
                       Add any relevant work experience, internships, or projects (optional)
                     </p>
                   </div>
@@ -914,7 +914,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                         >
                           <div>
                             <h4 className="font-medium">{exp.title}</h4>
-                            <p className="text-sm text-muted">{exp.companyName}</p>
+                            <p className="text-sm text-muted-foreground">{exp.companyName}</p>
                             <p className="text-xs text-dim mt-1">
                               {exp.startDate} - {exp.isCurrent ? 'Present' : exp.endDate}
                             </p>
@@ -922,7 +922,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                           <button
                             type="button"
                             onClick={() => removeExperience(index)}
-                            className="text-dim hover:text-muted"
+                            className="text-dim hover:text-muted-foreground"
                           >
                             <X className="h-4 w-4" />
                           </button>
@@ -1022,7 +1022,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                 <div className="space-y-6">
                   <div>
                     <h1 className="text-2xl font-bold">Tell us about yourself</h1>
-                    <p className="text-muted mt-1">
+                    <p className="text-muted-foreground mt-1">
                       Help startups understand who you are and what you&apos;re looking for
                     </p>
                   </div>
@@ -1038,7 +1038,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                         onChange={(e) => updateFormData('headline', e.target.value)}
                         placeholder='e.g., "Marketing strategist with data-driven approach", "Finance major passionate about startups", "Creative designer with UX focus"'
                       />
-                      <p className="text-xs text-muted">
+                      <p className="text-xs text-muted-foreground">
                         This will be the first thing startups see about you
                       </p>
                     </div>
@@ -1056,7 +1056,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                         onChange={(e) => updateFormData('githubUrl', e.target.value)}
                         placeholder="https://github.com/johndoe or https://yourportfolio.com"
                       />
-                      <p className="text-xs text-muted">
+                      <p className="text-xs text-muted-foreground">
                         Share your GitHub, portfolio, Behance, Dribbble, or any relevant work samples
                       </p>
                     </div>

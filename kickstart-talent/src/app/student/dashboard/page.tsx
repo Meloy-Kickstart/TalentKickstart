@@ -123,7 +123,7 @@ export default async function StudentDashboardPage() {
             <h1 className="text-2xl font-bold">
               Welcome back{(profile as any)?.full_name ? `, ${(profile as any).full_name.split(' ')[0]}` : ''}!
             </h1>
-            <p className="text-muted">
+            <p className="text-muted-foreground">
               Here&apos;s what&apos;s happening with your job search
             </p>
           </div>
@@ -142,7 +142,7 @@ export default async function StudentDashboardPage() {
           {/* Profile Completion Card */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Profile Completion
               </CardTitle>
             </CardHeader>
@@ -167,7 +167,7 @@ export default async function StudentDashboardPage() {
           {/* Applications Stats */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Applications
               </CardTitle>
             </CardHeader>
@@ -178,7 +178,7 @@ export default async function StudentDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{applications?.length || 0}</div>
-                  <p className="text-sm text-muted">Total applications</p>
+                  <p className="text-sm text-muted-foreground">Total applications</p>
                 </div>
               </div>
             </CardContent>
@@ -187,7 +187,7 @@ export default async function StudentDashboardPage() {
           {/* Profile Views (placeholder) */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Profile Views
               </CardTitle>
             </CardHeader>
@@ -198,7 +198,7 @@ export default async function StudentDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">--</div>
-                  <p className="text-sm text-muted">This week</p>
+                  <p className="text-sm text-muted-foreground">This week</p>
                 </div>
               </div>
             </CardContent>
@@ -225,16 +225,16 @@ export default async function StudentDashboardPage() {
                       <div className="flex-1 min-w-0">
                         <Link
                           href={`/roles/${(app as any).roles?.id}`}
-                          className="font-medium hover:text-muted truncate block"
+                          className="font-medium hover:text-muted-foreground truncate block"
                         >
                           {(app as any).roles?.title}
                         </Link>
-                        <p className="text-sm text-muted truncate">
+                        <p className="text-sm text-muted-foreground truncate">
                           {(app as any).roles?.startups?.company_name}
                         </p>
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
-                        <span className="text-xs text-dim">
+                        <span className="text-xs text-muted-foreground">
                           {formatRelativeTime((app as any).created_at)}
                         </span>
                         <ApplicationStatusBadge status={(app as any).status} />
@@ -275,7 +275,7 @@ export default async function StudentDashboardPage() {
                       className="block p-3 rounded-xl border border-edge hover:border-muted transition-colors"
                     >
                       <div className="font-medium">{(role as any).title}</div>
-                      <p className="text-sm text-muted">
+                      <p className="text-sm text-muted-foreground">
                         {(role as any).startups?.company_name}
                       </p>
                       <div className="flex gap-2 mt-2">

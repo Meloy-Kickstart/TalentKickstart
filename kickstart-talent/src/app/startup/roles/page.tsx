@@ -54,7 +54,7 @@ export default async function StartupRolesPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold">Your Roles</h1>
-            <p className="text-muted">
+            <p className="text-muted-foreground">
               Manage your job postings and review applications
             </p>
           </div>
@@ -78,7 +78,7 @@ export default async function StartupRolesPage() {
                         <div className="flex items-center gap-3 mb-2">
                           <Link
                             href={`/startup/roles/${(role as any).id}`}
-                            className="text-lg font-semibold hover:text-muted"
+                            className="text-lg font-semibold hover:text-muted-foreground"
                           >
                             {(role as any).title}
                           </Link>
@@ -88,7 +88,7 @@ export default async function StartupRolesPage() {
                             {(role as any).is_active ? 'Active' : 'Inactive'}
                           </Badge>
                         </div>
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted">
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                           {(role as any).role_type && (
                             <span className="capitalize">
                               {(role as any).role_type.replace('_', ' ')}

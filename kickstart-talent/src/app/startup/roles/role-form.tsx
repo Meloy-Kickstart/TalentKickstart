@@ -381,7 +381,7 @@ export function RoleForm({ allSkills, startup, role, currentSkillIds = [] }: Rol
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              <p className="text-xs text-muted mt-2">
+              <p className="text-xs text-muted-foreground mt-2">
                 {selectedSkills.length + customSkills.length}/10 skills added. Press Enter to add or click the + button.
               </p>
             </div>

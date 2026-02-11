@@ -115,7 +115,7 @@ export default async function AdminDashboardPage() {
       <div className="container py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             Overview of platform activity and pending actions
           </p>
         </div>
@@ -124,7 +124,7 @@ export default async function AdminDashboardPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Total Students
               </CardTitle>
             </CardHeader>
@@ -135,7 +135,7 @@ export default async function AdminDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{totalStudents || 0}</div>
-                  <p className="text-xs text-muted">
+                  <p className="text-xs text-muted-foreground">
                     {activeStudents || 0} available
                   </p>
                 </div>
@@ -145,7 +145,7 @@ export default async function AdminDashboardPage() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Startups
               </CardTitle>
             </CardHeader>
@@ -156,7 +156,7 @@ export default async function AdminDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{totalStartups || 0}</div>
-                  <p className="text-xs text-muted">
+                  <p className="text-xs text-muted-foreground">
                     {pendingStartups || 0} pending
                   </p>
                 </div>
@@ -166,7 +166,7 @@ export default async function AdminDashboardPage() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Open Roles
               </CardTitle>
             </CardHeader>
@@ -177,7 +177,7 @@ export default async function AdminDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{activeRoles || 0}</div>
-                  <p className="text-xs text-muted">
+                  <p className="text-xs text-muted-foreground">
                     of {totalRoles || 0} total
                   </p>
                 </div>
@@ -187,7 +187,7 @@ export default async function AdminDashboardPage() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Applications
               </CardTitle>
             </CardHeader>
@@ -198,7 +198,7 @@ export default async function AdminDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{totalApplications || 0}</div>
-                  <p className="text-xs text-muted">All time</p>
+                  <p className="text-xs text-muted-foreground">All time</p>
                 </div>
               </div>
             </CardContent>
@@ -229,7 +229,7 @@ export default async function AdminDashboardPage() {
                       >
                         <div>
                           <p className="font-medium">{(startup as any).company_name}</p>
-                          <p className="text-sm text-muted">
+                          <p className="text-sm text-muted-foreground">
                             {(contact as any)?.full_name || 'Unknown'} • {(contact as any)?.email}
                           </p>
                           <p className="text-xs text-dim">
@@ -248,7 +248,7 @@ export default async function AdminDashboardPage() {
               ) : (
                 <div className="text-center py-8">
                   <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-2" />
-                  <p className="text-muted">All caught up!</p>
+                  <p className="text-muted-foreground">All caught up!</p>
                   <p className="text-sm text-dim">
                     No pending verifications
                   </p>
@@ -283,7 +283,7 @@ export default async function AdminDashboardPage() {
                           <p className="font-medium truncate">
                             {(student as any)?.profiles?.full_name || 'Unknown'}
                           </p>
-                          <p className="text-sm text-muted truncate">
+                          <p className="text-sm text-muted-foreground truncate">
                             Applied to {(role as any)?.title} at {(role as any)?.startups?.company_name}
                           </p>
                         </div>

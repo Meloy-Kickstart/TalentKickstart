@@ -99,7 +99,7 @@ export default async function StartupDashboardPage() {
             <h1 className="text-2xl font-bold">
               {(startup as any)?.company_name || 'Your Dashboard'}
             </h1>
-            <p className="text-muted">
+            <p className="text-muted-foreground">
               Manage your roles and review applications
             </p>
           </div>
@@ -148,7 +148,7 @@ export default async function StartupDashboardPage() {
         <div className="grid gap-6 md:grid-cols-3 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Active Roles
               </CardTitle>
             </CardHeader>
@@ -159,7 +159,7 @@ export default async function StartupDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{activeRoles}</div>
-                  <p className="text-sm text-muted">of {totalRoles} total</p>
+                  <p className="text-sm text-muted-foreground">of {totalRoles} total</p>
                 </div>
               </div>
             </CardContent>
@@ -167,7 +167,7 @@ export default async function StartupDashboardPage() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Total Applications
               </CardTitle>
             </CardHeader>
@@ -178,7 +178,7 @@ export default async function StartupDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">{totalApplications}</div>
-                  <p className="text-sm text-muted">Across all roles</p>
+                  <p className="text-sm text-muted-foreground">Across all roles</p>
                 </div>
               </div>
             </CardContent>
@@ -186,7 +186,7 @@ export default async function StartupDashboardPage() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Profile Views
               </CardTitle>
             </CardHeader>
@@ -197,7 +197,7 @@ export default async function StartupDashboardPage() {
                 </div>
                 <div>
                   <div className="text-2xl font-bold">--</div>
-                  <p className="text-sm text-muted">This week</p>
+                  <p className="text-sm text-muted-foreground">This week</p>
                 </div>
               </div>
             </CardContent>
@@ -247,7 +247,7 @@ export default async function StartupDashboardPage() {
                         <div className="flex items-center gap-3 flex-shrink-0">
                           <span className="text-sm">
                             <span className="font-medium">{appCount}</span>
-                            <span className="text-muted"> applicants</span>
+                            <span className="text-muted-foreground"> applicants</span>
                           </span>
                           <Button variant="ghost" size="sm" asChild>
                             <Link href={`/startup/roles/${(role as any).id}`}>
@@ -302,7 +302,7 @@ export default async function StartupDashboardPage() {
                           >
                             {(student as any)?.profiles?.full_name || 'Unknown'}
                           </Link>
-                          <p className="text-sm text-muted truncate">
+                          <p className="text-sm text-muted-foreground truncate">
                             Applied to {(app as any).roles?.title}
                           </p>
                         </div>

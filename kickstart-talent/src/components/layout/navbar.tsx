@@ -71,19 +71,19 @@ export function Navbar({ user }: NavbarProps) {
                 <>
                   <Link
                     href="/student/dashboard"
-                    className={`text-sm transition-colors ${pathname === '/student/dashboard' ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname === '/student/dashboard' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/roles"
-                    className={`text-sm transition-colors ${pathname === '/roles' ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname === '/roles' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Browse Roles
                   </Link>
                   <Link
                     href="/startups"
-                    className={`text-sm transition-colors ${pathname === '/startups' ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname === '/startups' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Startups
                   </Link>
@@ -93,19 +93,19 @@ export function Navbar({ user }: NavbarProps) {
                 <>
                   <Link
                     href="/startup/dashboard"
-                    className={`text-sm transition-colors ${pathname === '/startup/dashboard' ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname === '/startup/dashboard' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/startup/roles"
-                    className={`text-sm transition-colors ${pathname.startsWith('/startup/roles') ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname.startsWith('/startup/roles') ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     My Roles
                   </Link>
                   <Link
                     href="/talent"
-                    className={`text-sm transition-colors ${pathname === '/talent' ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname === '/talent' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Browse Talent
                   </Link>
@@ -115,19 +115,19 @@ export function Navbar({ user }: NavbarProps) {
                 <>
                   <Link
                     href="/admin"
-                    className={`text-sm transition-colors ${pathname === '/admin' ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname === '/admin' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/admin/startups"
-                    className={`text-sm transition-colors ${pathname === '/admin/startups' ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname === '/admin/startups' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Startups
                   </Link>
                   <Link
                     href="/admin/students"
-                    className={`text-sm transition-colors ${pathname === '/admin/students' ? 'text-[#500000] font-medium' : 'text-[#500000]/60 hover:text-[#500000]'}`}
+                    className={`text-sm transition-colors ${pathname === '/admin/students' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Students
                   </Link>
@@ -156,7 +156,7 @@ export function Navbar({ user }: NavbarProps) {
                     {user.fullName && (
                       <p className="font-medium text-[#1a0a0d]">{user.fullName}</p>
                     )}
-                    <p className="text-xs text-[#500000]/60">{user.email}</p>
+                    <p className="text-xs text-[#500000]/80">{user.email}</p>
                   </div>
                 </div>
                 <DropdownMenuSeparator className="bg-[#500000]/10" />

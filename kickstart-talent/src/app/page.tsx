@@ -144,7 +144,7 @@ export default async function HomePage() {
             {/* Stats - Floating Glass Cards */}
             <div className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               {[
-                { label: 'Students', value: studentCount || '500+', desc: 'Ready to build', delay: '0s' },
+                { label: 'Students', value: studentCount || '100+', desc: 'Ready to build', delay: '0s' },
                 { label: 'Startups', value: startupCount || '50+', desc: 'Hiring now', delay: '0.2s' },
                 { label: 'Roles', value: roleCount || '100+', desc: 'Active opportunities', delay: '0.4s' },
               ].map((stat, i) => (

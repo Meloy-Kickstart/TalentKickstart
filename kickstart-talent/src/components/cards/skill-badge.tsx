@@ -11,7 +11,7 @@ export function SkillBadge({ name, className, removable, onRemove }: SkillBadgeP
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full bg-card-hover px-3 py-1 text-sm font-medium text-muted",
+        "inline-flex items-center gap-1 rounded-full bg-card-hover px-3 py-1 text-sm font-medium text-muted-foreground",
         className
       )}
     >

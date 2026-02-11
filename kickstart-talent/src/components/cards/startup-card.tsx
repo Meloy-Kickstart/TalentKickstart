@@ -52,7 +52,7 @@ export function StartupCard({
                 {getInitials(companyName)}
               </AvatarFallback>
             </Avatar>
-            
+
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="font-semibold text-foreground truncate">{companyName}</h3>
@@ -60,12 +60,12 @@ export function StartupCard({
                   <Badge variant="success" className="text-xs">Verified</Badge>
                 )}
               </div>
-              
+
               {tagline && (
-                <p className="text-sm text-muted mb-3 line-clamp-2">{tagline}</p>
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{tagline}</p>
               )}
-              
-              <div className="flex flex-wrap gap-3 text-xs text-muted">
+
+              <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
                 {stage && (
                   <Badge variant="outline" className="text-xs font-normal">
                     {stageLabels[stage] || stage}
@@ -90,20 +90,20 @@ export function StartupCard({
                   </span>
                 )}
               </div>
-              
+
               {roleCount !== undefined && roleCount > 0 && (
                 <p className="mt-3 text-sm font-medium text-maroon-400">
                   {roleCount} open {roleCount === 1 ? 'role' : 'roles'}
                 </p>
               )}
             </div>
-            
+
             {website && (
               <a
                 href={website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-dim hover:text-muted"
+                className="text-dim hover:text-muted-foreground"
                 onClick={(e) => e.stopPropagation()}
               >
                 <ExternalLink className="h-4 w-4" />

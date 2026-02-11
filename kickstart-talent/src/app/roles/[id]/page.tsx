@@ -18,6 +18,7 @@ import {
   Globe,
   Briefcase,
   ExternalLink,
+  FileText,
 } from 'lucide-react'
 import { ApplyButton } from './apply-button'
 
@@ -32,6 +33,7 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
   const { data: { user } } = await supabase.auth.getUser()
 
   let profile = null
+  let student: any = null
   let hasApplied = false
   let isSaved = false
 
@@ -60,6 +62,14 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
       .eq('student_id', user.id)
       .single()
     isSaved = !!saved
+
+    // Fetch student info for resume
+    const { data: studentData } = await supabase
+      .from('students')
+      .select('resume_url')
+      .eq('id', user.id)
+      .single()
+    student = studentData
   }
 
   // Fetch role with startup info
@@ -161,7 +171,7 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
                   <div className="flex-1">
                     <h1 className="text-2xl font-bold mb-1">{roleData.title}</h1>
                     <Link
-                      href={`/startups/${startup.id}`}
+                      href={`/startup/${startup.id}`}
                       className="text-neutral-500 hover:text-neutral-900"
                     >
                       {startup.company_name}
@@ -254,6 +264,22 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
                     <p className="text-xs text-neutral-400 text-center mt-3">
                       Posted {formatDate(roleData.created_at)}
                     </p>
+                    {student?.resume_url && !hasApplied && (
+                      <div className="mt-4 pt-4 border-t border-neutral-100 italic">
+                        <p className="text-xs text-neutral-500 mb-2">
+                          Applying with your profile resume:
+                        </p>
+                        <a
+                          href={student.resume_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-[#500000] hover:underline flex items-center gap-1"
+                        >
+                          <FileText className="h-3 w-3" />
+                          View Current Resume
+                        </a>
+                      </div>
+                    )}
                   </>
                 ) : user ? (
                   <p className="text-sm text-neutral-500 text-center">
@@ -325,7 +351,7 @@ export default async function RoleDetailPage({ params }: RoleDetailPageProps) {
                   )}
                 </div>
                 <Button variant="outline" asChild className="w-full">
-                  <Link href={`/startups/${startup.id}`}>View company profile</Link>
+                  <Link href={`/startup/${startup.id}`}>View company profile</Link>
                 </Button>
               </CardContent>
             </Card>

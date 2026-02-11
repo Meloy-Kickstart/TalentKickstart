@@ -12,6 +12,18 @@
   --color-secondary: #a50034;
   --color-accent: #d4a574;
 
+  /* Maroon Compatibility */
+  --color-maroon-50: #fff5f5;
+  --color-maroon-100: #ffe3e3;
+  --color-maroon-200: #ffc9c9;
+  --color-maroon-300: #ffa1a1;
+  --color-maroon-400: #ff6b6b;
+  --color-maroon-500: #fa5252;
+  --color-maroon-600: #732222;
+  --color-maroon-700: #500000;
+  --color-maroon-800: #3d0000;
+  --color-maroon-900: #1a0a0d;
+
   /* Liquid Glass Colors - Soft & Muted */
   --glass-tint: rgba(255, 255, 255, 0.6);
   --glass-edge: rgba(255, 255, 255, 0.8);

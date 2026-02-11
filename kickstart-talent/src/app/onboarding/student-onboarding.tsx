@@ -32,6 +32,8 @@ import {
   X,
   Github,
   Linkedin,
+  FileText,
+  Upload,
 } from "lucide-react"
 
 interface Skill {
@@ -143,6 +145,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
+  const [uploadingResume, setUploadingResume] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [skills, setSkills] = useState(initialSkills)
 
@@ -184,6 +187,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
     githubUrl: '',
     lookingFor: '',
     proudProject: '',
+    resumeUrl: '',
   })
 
   const [skillSearch, setSkillSearch] = useState('')
@@ -209,6 +213,8 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
       if (arr.includes(value)) {
         return { ...prev, [field]: arr.filter(v => v !== value) }
       } else {
+        // Block adding more than 10 skills
+        if (field === 'selectedSkills' && arr.length >= 10) return prev
         return { ...prev, [field]: [...arr, value] }
       }
     })
@@ -216,6 +222,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
 
   const addCustomSkill = (name: string) => {
     if (!name.trim()) return
+    if (formData.selectedSkills.length >= 10) return
     const exists = skills.find(s => s.name.toLowerCase() === name.toLowerCase())
     if (exists) {
       if (!formData.selectedSkills.includes(exists.id)) {
@@ -279,6 +286,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
           githubUrl: formData.githubUrl,
           lookingFor: formData.lookingFor,
           proudProject: formData.proudProject,
+          resumeUrl: formData.resumeUrl,
         },
         skillIds: formData.selectedSkills,
         experiences: formData.experiences,
@@ -725,8 +733,9 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
 
                   <div className="space-y-4">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">
+                      <span className={cn("text-muted-foreground", formData.selectedSkills.length >= 10 && "text-[#500000] font-semibold")}>
                         {formData.selectedSkills.length} / 10 skills selected
+                        {formData.selectedSkills.length >= 10 && " (max reached)"}
                       </span>
                       {formData.selectedSkills.length < 3 && (
                         <span className="text-[#500000]/60">Select {3 - formData.selectedSkills.length} more to continue</span>
@@ -816,10 +825,16 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                           {skillSearch && (
                             <button
                               type="button"
+                              disabled={formData.selectedSkills.length >= 10}
                               onClick={() => addCustomSkill(skillSearch)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#500000] text-white px-4 py-1.5 rounded-xl text-sm font-medium hover:bg-[#700000] transition-colors"
+                              className={cn(
+                                "absolute right-3 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-xl text-sm font-medium transition-colors",
+                                formData.selectedSkills.length >= 10
+                                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                  : "bg-[#500000] text-white hover:bg-[#700000]"
+                              )}
                             >
-                              Add Custom
+                              {formData.selectedSkills.length >= 10 ? 'Max 10 reached' : 'Add Custom'}
                             </button>
                           )}
                         </div>
@@ -838,8 +853,12 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                                   <button
                                     key={pick.name}
                                     type="button"
+                                    disabled={formData.selectedSkills.length >= 10}
                                     onClick={() => addCustomSkill(pick.name)}
-                                    className="flex items-center justify-between p-3 rounded-xl border border-[#500000]/5 bg-white/20 hover:bg-white/60 hover:border-[#500000]/20 transition-all text-left group"
+                                    className={cn(
+                                      "flex items-center justify-between p-3 rounded-xl border border-[#500000]/5 bg-white/20 hover:bg-white/60 hover:border-[#500000]/20 transition-all text-left group",
+                                      formData.selectedSkills.length >= 10 && "opacity-40 cursor-not-allowed hover:bg-white/20 hover:border-[#500000]/5"
+                                    )}
                                   >
                                     <span className="text-sm font-medium text-[#500000]/80">{pick.name}</span>
                                     <Plus className="h-4 w-4 text-[#500000]/30 group-hover:text-[#500000] transition-colors" />
@@ -859,11 +878,15 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                                   <button
                                     key={skill.id}
                                     type="button"
+                                    disabled={formData.selectedSkills.length >= 10}
                                     onClick={() => {
                                       toggleArrayItem('selectedSkills', skill.id)
                                       setSkillSearch('')
                                     }}
-                                    className="flex items-center justify-between p-4 rounded-xl border border-[#500000]/5 bg-white/20 hover:bg-white/60 hover:border-[#500000]/20 transition-all text-left group w-full"
+                                    className={cn(
+                                      "flex items-center justify-between p-4 rounded-xl border border-[#500000]/5 bg-white/20 hover:bg-white/60 hover:border-[#500000]/20 transition-all text-left group w-full",
+                                      formData.selectedSkills.length >= 10 && "opacity-40 cursor-not-allowed hover:bg-white/20 hover:border-[#500000]/5"
+                                    )}
                                   >
                                     <span className="text-base font-medium text-[#500000]/80">{skill.name}</span>
                                     <Plus className="h-5 w-5 text-[#500000]/30 group-hover:text-[#500000] transition-colors" />
@@ -873,8 +896,12 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                               {!skills.some(s => s.name.toLowerCase() === skillSearch.toLowerCase()) && (
                                 <button
                                   type="button"
+                                  disabled={formData.selectedSkills.length >= 10}
                                   onClick={() => addCustomSkill(skillSearch)}
-                                  className="flex items-center gap-3 p-4 rounded-xl border border-dashed border-[#500000]/20 bg-[#500000]/5 hover:bg-[#500000]/10 transition-all text-left w-full group"
+                                  className={cn(
+                                    "flex items-center gap-3 p-4 rounded-xl border border-dashed border-[#500000]/20 bg-[#500000]/5 hover:bg-[#500000]/10 transition-all text-left w-full group",
+                                    formData.selectedSkills.length >= 10 && "opacity-40 cursor-not-allowed hover:bg-[#500000]/5"
+                                  )}
                                 >
                                   <div className="h-10 w-10 rounded-full bg-[#500000]/10 flex items-center justify-center text-[#500000]">
                                     <Plus className="h-5 w-5" />
@@ -1030,7 +1057,7 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="headline">
-                        Describe yourself in a short phrase *
+                        Describe yourself in a short phrase. e.g. &quot;Recent EE college grad specializing in Photonics&quot;, &quot;DevOps engineer who scaled a site to 10M+ users&quot; *
                       </Label>
                       <Input
                         id="headline"
@@ -1085,6 +1112,81 @@ export function StudentOnboarding({ skills: initialSkills }: StudentOnboardingPr
                         placeholder="Describe a project, campaign, initiative, or achievement from start to finish. This could be a technical project, marketing campaign, event you organized, research you conducted, or any work you're proud of. Be specific about your personal contribution and the impact."
                         rows={4}
                       />
+                    </div>
+
+                    <div className="space-y-4 pt-4 border-t border-[#500000]/10">
+                      <div className="space-y-2">
+                        <Label htmlFor="resume">Resume (Link or Upload)</Label>
+                        <div className="flex gap-2">
+                          <div className="relative flex-1">
+                            <Input
+                              id="resumeUrl"
+                              value={formData.resumeUrl}
+                              onChange={(e) => updateFormData('resumeUrl', e.target.value)}
+                              placeholder="https://..."
+                              className="pl-10"
+                            />
+                            <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#500000]/40" />
+                          </div>
+                          <div className="relative">
+                            <input
+                              type="file"
+                              id="resume-upload"
+                              className="hidden"
+                              accept=".pdf,.doc,.docx"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0]
+                                if (!file) return
+
+                                setUploadingResume(true)
+                                try {
+                                  // We'll use a client-side supabase client here
+                                  const { createClient } = await import('@/lib/supabase/client')
+                                  const supabase = createClient()
+
+                                  const fileExt = file.name.split('.').pop()
+                                  const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`
+                                  const filePath = `resumes/${fileName}`
+
+                                  const { error: uploadError } = await supabase.storage
+                                    .from('resumes')
+                                    .upload(filePath, file)
+
+                                  if (uploadError) throw uploadError
+
+                                  const { data: { publicUrl } } = supabase.storage
+                                    .from('resumes')
+                                    .getPublicUrl(filePath)
+
+                                  updateFormData('resumeUrl', publicUrl)
+                                } catch (err: any) {
+                                  console.error('Error uploading resume:', err)
+                                  setError(err.message || 'Failed to upload resume')
+                                } finally {
+                                  setUploadingResume(false)
+                                }
+                              }}
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              disabled={uploadingResume}
+                              onClick={() => document.getElementById('resume-upload')?.click()}
+                              className="whitespace-nowrap"
+                            >
+                              {uploadingResume ? (
+                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                              ) : (
+                                <Upload className="h-4 w-4 mr-2" />
+                              )}
+                              Upload PDF
+                            </Button>
+                          </div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Provide a link to your resume (Google Drive, Dropbox) or upload a PDF
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -126,8 +126,8 @@ export function Navbar({ user }: NavbarProps) {
                     Startups
                   </Link>
                   <Link
-                    href="/admin/students"
-                    className={`text-sm transition-colors ${pathname === '/admin/students' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
+                    href="/students"
+                    className={`text-sm transition-colors ${pathname === '/students' ? 'text-[#500000] font-medium' : 'text-[#500000]/80 hover:text-[#500000]'}`}
                   >
                     Students
                   </Link>

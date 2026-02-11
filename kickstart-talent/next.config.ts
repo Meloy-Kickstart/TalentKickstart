@@ -1,7 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: '/about',
+        destination: 'https://meloykickstart.tech/',
+        permanent: false,
+      },
+      {
+        source: '/contact',
+        destination: 'https://meloykickstart.tech/',
+        permanent: false,
+      },
+    ]
+  },
 };
 
 export default nextConfig;

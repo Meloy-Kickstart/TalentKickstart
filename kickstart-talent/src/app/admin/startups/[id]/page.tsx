@@ -77,9 +77,9 @@ export default async function AdminStartupDetailPage({ params }: AdminStartupDet
         {/* Back link */}
         <Link
           href="/admin/startups"
-          className="inline-flex items-center text-sm text-muted hover:text-foreground mb-6"
+          className="inline-flex items-center text-sm text-neutral-600 hover:text-foreground mb-6"
         >
-          <ArrowLeft className="h-4 w-4 mr-1" />
+          <ArrowLeft className="h-4 w-4 mr-1 text-neutral-500" />
           Back to startups
         </Link>
 
@@ -87,7 +87,7 @@ export default async function AdminStartupDetailPage({ params }: AdminStartupDet
         <div className="flex items-start justify-between mb-8">
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-card-hover">
-              <Building2 className="h-8 w-8 text-dim" />
+              <Building2 className="h-8 w-8 text-neutral-500" />
             </div>
             <div>
               <div className="flex items-center gap-3">
@@ -106,7 +106,7 @@ export default async function AdminStartupDetailPage({ params }: AdminStartupDet
                   )}
                 </Badge>
               </div>
-              <p className="text-muted">
+              <p className="text-neutral-600">
                 Registered {formatDate((startup as any).created_at)}
               </p>
             </div>
@@ -123,53 +123,53 @@ export default async function AdminStartupDetailPage({ params }: AdminStartupDet
             <CardContent className="space-y-4">
               {(startup as any).description && (
                 <div>
-                  <label className="text-sm font-medium text-muted">Description</label>
+                  <label className="text-sm font-medium text-neutral-600">Description</label>
                   <p className="mt-1">{(startup as any).description}</p>
                 </div>
               )}
               <div className="grid gap-4 sm:grid-cols-2">
                 {(startup as any).industry && (
                   <div>
-                    <label className="text-sm font-medium text-muted">Industry</label>
+                    <label className="text-sm font-medium text-neutral-600">Industry</label>
                     <p className="mt-1">{(startup as any).industry}</p>
                   </div>
                 )}
                 {(startup as any).stage && (
                   <div>
-                    <label className="text-sm font-medium text-muted">Stage</label>
+                    <label className="text-sm font-medium text-neutral-600">Stage</label>
                     <p className="mt-1 capitalize">{(startup as any).stage.replace('_', ' ')}</p>
                   </div>
                 )}
                 {(startup as any).team_size && (
                   <div>
-                    <label className="text-sm font-medium text-muted">Team Size</label>
+                    <label className="text-sm font-medium text-neutral-600">Team Size</label>
                     <p className="mt-1 flex items-center gap-1">
-                      <Users className="h-4 w-4 text-dim" />
+                      <Users className="h-4 w-4 text-neutral-500" />
                       {(startup as any).team_size}
                     </p>
                   </div>
                 )}
                 {(startup as any).founded_year && (
                   <div>
-                    <label className="text-sm font-medium text-muted">Founded</label>
+                    <label className="text-sm font-medium text-neutral-600">Founded</label>
                     <p className="mt-1 flex items-center gap-1">
-                      <Calendar className="h-4 w-4 text-dim" />
+                      <Calendar className="h-4 w-4 text-neutral-500" />
                       {(startup as any).founded_year}
                     </p>
                   </div>
                 )}
                 {(startup as any).location && (
                   <div>
-                    <label className="text-sm font-medium text-muted">Location</label>
+                    <label className="text-sm font-medium text-neutral-600">Location</label>
                     <p className="mt-1 flex items-center gap-1">
-                      <MapPin className="h-4 w-4 text-dim" />
+                      <MapPin className="h-4 w-4 text-neutral-500" />
                       {(startup as any).location}
                     </p>
                   </div>
                 )}
                 {(startup as any).website && (
                   <div>
-                    <label className="text-sm font-medium text-muted">Website</label>
+                    <label className="text-sm font-medium text-neutral-600">Website</label>
                     <a
                       href={(startup as any).website}
                       target="_blank"
@@ -193,11 +193,11 @@ export default async function AdminStartupDetailPage({ params }: AdminStartupDet
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-muted">Name</label>
+                <label className="text-sm font-medium text-neutral-600">Name</label>
                 <p className="mt-1">{(contact as any)?.full_name || 'Not provided'}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted">Email</label>
+                <label className="text-sm font-medium text-neutral-600">Email</label>
                 <a
                   href={`mailto:${(contact as any)?.email}`}
                   className="mt-1 flex items-center gap-1 text-blue-600 hover:underline"
@@ -224,7 +224,7 @@ export default async function AdminStartupDetailPage({ params }: AdminStartupDet
                     >
                       <div>
                         <p className="font-medium">{(role as any).title}</p>
-                        <p className="text-sm text-muted">
+                        <p className="text-sm text-neutral-600">
                           Created {formatDate((role as any).created_at)}
                         </p>
                       </div>
@@ -235,7 +235,7 @@ export default async function AdminStartupDetailPage({ params }: AdminStartupDet
                   ))}
                 </div>
               ) : (
-                <p className="text-dim text-center py-4">
+                <p className="text-neutral-500 text-center py-4">
                   No roles posted yet
                 </p>
               )}

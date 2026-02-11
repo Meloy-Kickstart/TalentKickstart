@@ -28,6 +28,8 @@ import {
   Globe,
   X,
   Check,
+  FileText,
+  Upload,
 } from 'lucide-react'
 
 interface Skill {
@@ -38,7 +40,7 @@ interface Skill {
 
 interface Experience {
   id: string
-  company: string
+  company_name: string
   title: string
   start_date: string
   end_date?: string | null
@@ -87,6 +89,8 @@ export function ProfileEditor({
   const [showSkillPicker, setShowSkillPicker] = useState(false)
   const [showAddExperience, setShowAddExperience] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const [uploadingResume, setUploadingResume] = useState(false)
+  const [resumeUrl, setResumeUrl] = useState(student?.resume_url || '')
 
   // Group skills by category
   const skillsByCategory = allSkills.reduce((acc, skill) => {
@@ -180,7 +184,7 @@ export function ProfileEditor({
               <Label htmlFor="full_name">Full Name</Label>
               <Input
                 id="full_name"
-                name="full_name"
+                name="fullName"
                 defaultValue={profile?.full_name || ''}
                 placeholder="Your full name"
               />
@@ -240,7 +244,7 @@ export function ProfileEditor({
                 <Label htmlFor="graduation_year">Graduation Year</Label>
                 <Input
                   id="graduation_year"
-                  name="graduation_year"
+                  name="graduationYear"
                   type="number"
                   defaultValue={student?.graduation_year || ''}
                   placeholder="2025"
@@ -265,7 +269,7 @@ export function ProfileEditor({
               <Label htmlFor="looking_for">What are you looking for in your next role?</Label>
               <Textarea
                 id="looking_for"
-                name="looking_for"
+                name="lookingFor"
                 defaultValue={student?.looking_for || ''}
                 placeholder="I'm looking for a role where I can..."
                 rows={3}
@@ -275,7 +279,7 @@ export function ProfileEditor({
               <Label htmlFor="proud_project">Tell us about a project you're proud of</Label>
               <Textarea
                 id="proud_project"
-                name="proud_project"
+                name="proudProject"
                 defaultValue={student?.proud_project || ''}
                 placeholder="Describe a project, what you built, and what you learned..."
                 rows={3}
@@ -299,7 +303,7 @@ export function ProfileEditor({
               </Label>
               <Input
                 id="github_url"
-                name="github_url"
+                name="githubUrl"
                 type="url"
                 defaultValue={student?.github_url || ''}
                 placeholder="https://github.com/username"
@@ -311,7 +315,7 @@ export function ProfileEditor({
               </Label>
               <Input
                 id="linkedin_url"
-                name="linkedin_url"
+                name="linkedinUrl"
                 type="url"
                 defaultValue={student?.linkedin_url || ''}
                 placeholder="https://linkedin.com/in/username"
@@ -323,11 +327,85 @@ export function ProfileEditor({
               </Label>
               <Input
                 id="portfolio_url"
-                name="portfolio_url"
+                name="portfolioUrl"
                 type="url"
                 defaultValue={student?.portfolio_url || ''}
                 placeholder="https://yoursite.com"
               />
+            </div>
+            <div className="pt-4 border-t border-[#500000]/10">
+              <Label htmlFor="resume_url" className="flex items-center gap-2 mb-2">
+                <FileText className="h-4 w-4" /> Resume (Link or Upload)
+              </Label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Input
+                    id="resume_url"
+                    name="resumeUrl"
+                    value={resumeUrl}
+                    onChange={(e) => setResumeUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="pl-10"
+                  />
+                  <FileText className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#500000]/40" />
+                </div>
+                <div className="relative">
+                  <input
+                    type="file"
+                    id="resume-upload"
+                    className="hidden"
+                    accept=".pdf,.doc,.docx"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+
+                      setUploadingResume(true)
+                      try {
+                        const { createClient } = await import('@/lib/supabase/client')
+                        const supabase = createClient()
+
+                        const fileExt = file.name.split('.').pop()
+                        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`
+                        const filePath = `resumes/${fileName}`
+
+                        const { error: uploadError } = await supabase.storage
+                          .from('resumes')
+                          .upload(filePath, file)
+
+                        if (uploadError) throw uploadError
+
+                        const { data: { publicUrl } } = supabase.storage
+                          .from('resumes')
+                          .getPublicUrl(filePath)
+
+                        setResumeUrl(publicUrl)
+                      } catch (err: any) {
+                        console.error('Error uploading resume:', err)
+                        alert(err.message || 'Failed to upload resume')
+                      } finally {
+                        setUploadingResume(false)
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={uploadingResume}
+                    onClick={() => document.getElementById('resume-upload')?.click()}
+                    className="whitespace-nowrap"
+                  >
+                    {uploadingResume ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <Upload className="h-4 w-4 mr-2" />
+                    )}
+                    Upload PDF
+                  </Button>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Provide a link to your resume or upload a PDF
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -452,7 +530,7 @@ export function ProfileEditor({
                   <Label htmlFor="exp_company">Company</Label>
                   <Input
                     id="exp_company"
-                    name="company"
+                    name="companyName"
                     required
                     placeholder="Company name"
                   />
@@ -470,7 +548,7 @@ export function ProfileEditor({
                   <Label htmlFor="exp_start_date">Start Date</Label>
                   <Input
                     id="exp_start_date"
-                    name="start_date"
+                    name="startDate"
                     type="date"
                     required
                   />
@@ -479,7 +557,7 @@ export function ProfileEditor({
                   <Label htmlFor="exp_end_date">End Date</Label>
                   <Input
                     id="exp_end_date"
-                    name="end_date"
+                    name="endDate"
                     type="date"
                     placeholder="Leave blank if current"
                   />
@@ -498,7 +576,8 @@ export function ProfileEditor({
                 <input
                   type="checkbox"
                   id="exp_is_current"
-                  name="is_current"
+                  name="isCurrent"
+                  value="true"
                   className="rounded"
                 />
                 <Label htmlFor="exp_is_current" className="font-normal">
@@ -531,7 +610,7 @@ export function ProfileEditor({
                 <div key={exp.id} className="flex items-start justify-between py-4 border-b last:border-0">
                   <div>
                     <h4 className="font-medium">{exp.title}</h4>
-                    <p className="text-sm text-muted-foreground">{exp.company}</p>
+                    <p className="text-sm text-muted-foreground">{exp.company_name}</p>
                     <p className="text-xs text-dim">
                       {new Date(exp.start_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                       {' - '}

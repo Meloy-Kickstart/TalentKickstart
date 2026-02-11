@@ -210,7 +210,7 @@ export default async function AdminDashboardPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-amber-500" />
+                <AlertCircle className="h-5 w-5 text-amber-600" />
                 Pending Verifications
               </CardTitle>
               <Button variant="ghost" size="sm" asChild>
@@ -290,9 +290,9 @@ export default async function AdminDashboardPage() {
                         <div className="flex items-center gap-2 flex-shrink-0">
                           <Badge variant={
                             (app as any).status === 'pending' ? 'warning' :
-                            (app as any).status === 'accepted' ? 'success' :
-                            (app as any).status === 'rejected' ? 'destructive' :
-                            'secondary'
+                              (app as any).status === 'accepted' ? 'success' :
+                                (app as any).status === 'rejected' ? 'destructive' :
+                                  'secondary'
                           }>
                             {(app as any).status}
                           </Badge>

@@ -127,15 +127,15 @@ export default async function StartupDashboardPage() {
 
         {/* Verification Banner */}
         {!(startup as any)?.is_verified && (
-          <Card className="mb-6 border-amber-900/50 bg-amber-950/30">
+          <Card className="mb-6 border-amber-200 bg-amber-50/50 backdrop-blur-sm">
             <CardContent className="py-4">
               <div className="flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 text-amber-400" />
+                <AlertCircle className="h-5 w-5 text-amber-600" />
                 <div>
-                  <p className="font-medium text-amber-300">
+                  <p className="font-medium text-amber-900">
                     Your startup is pending verification
                   </p>
-                  <p className="text-sm text-amber-400/80">
+                  <p className="text-sm text-amber-800/80">
                     Once verified, your company and roles will be visible to students. This usually takes 1-2 business days.
                   </p>
                 </div>

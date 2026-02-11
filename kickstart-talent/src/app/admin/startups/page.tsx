@@ -69,7 +69,7 @@ export default async function AdminStartupsPage() {
         {(pendingStartups as any).length > 0 && (
           <div className="mb-8">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Clock className="h-5 w-5 text-amber-500" />
+              <Clock className="h-5 w-5 text-amber-600" />
               Pending Verification ({(pendingStartups as any).length})
             </h2>
             <div className="space-y-4">

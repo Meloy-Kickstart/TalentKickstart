@@ -400,9 +400,9 @@ export function StartupOnboarding() {
                                         </div>
                                     </div>
 
-                                    <div className="rounded-xl bg-amber-950/30 border border-amber-900/50 p-4">
-                                        <p className="text-sm text-amber-300">
-                                            <strong>Note:</strong> Your startup profile will need to be verified by our team before it becomes visible to students. This usually takes 1-2 business days.
+                                    <div className="rounded-xl bg-amber-50/50 border border-amber-200 p-4 backdrop-blur-sm">
+                                        <p className="text-sm text-amber-900">
+                                            <strong className="text-amber-700">Note:</strong> Your startup profile will need to be verified by our team before it becomes visible to students. This usually takes 1-2 business days.
                                         </p>
                                     </div>
                                 </div>

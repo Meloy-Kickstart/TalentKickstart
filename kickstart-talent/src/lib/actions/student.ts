@@ -11,19 +11,21 @@ export async function updateProfile(formData: FormData) {
     return { error: 'Not authenticated' }
   }
 
-  const fullName = formData.get('fullName') as string
-  const phone = formData.get('phone') as string
-  const linkedinUrl = formData.get('linkedinUrl') as string
-  const location = formData.get('location') as string
+  // Only update fields that are actually present in the form
+  const updateData: Record<string, unknown> = {}
+
+  if (formData.has('fullName')) updateData.full_name = formData.get('fullName') as string
+  if (formData.has('phone')) updateData.phone = formData.get('phone') as string
+  if (formData.has('linkedinUrl')) updateData.linkedin_url = formData.get('linkedinUrl') as string
+  if (formData.has('location')) updateData.location = formData.get('location') as string
+
+  if (Object.keys(updateData).length === 0) {
+    return { success: true }
+  }
 
   const { error } = await (supabase
     .from('profiles') as any)
-    .update({
-      full_name: fullName,
-      phone,
-      linkedin_url: linkedinUrl,
-      location,
-    })
+    .update(updateData)
     .eq('id', user.id)
 
   if (error) {
@@ -42,42 +44,37 @@ export async function updateStudentProfile(formData: FormData) {
     return { error: 'Not authenticated' }
   }
 
-  const headline = formData.get('headline') as string
-  const bio = formData.get('bio') as string
-  const major = formData.get('major') as string
-  const graduationYear = parseInt(formData.get('graduationYear') as string)
-  const availability = formData.getAll('availability') as string[]
-  const compensationPreference = formData.get('compensationPreference') as string
-  const willingToRelocate = formData.get('willingToRelocate') === 'true'
-  const requiresSponsorship = formData.get('requiresSponsorship') === 'true'
-  const preferredCompanySizes = formData.getAll('preferredCompanySizes') as string[]
-  const githubUrl = formData.get('githubUrl') as string
-  const portfolioUrl = formData.get('portfolioUrl') as string
-  const lookingFor = formData.get('lookingFor') as string
-  const proudProject = formData.get('proudProject') as string
-  const jobFunctions = formData.getAll('jobFunctions') as string[]
-  const interestedRoles = formData.getAll('interestedRoles') as string[]
+  // Only update fields that are actually present in the form
+  // This prevents overwriting onboarding-only fields (availability, sponsorship, etc.)
+  const updateData: Record<string, unknown> = { id: user.id }
+
+  if (formData.has('headline')) updateData.headline = formData.get('headline') as string
+  if (formData.has('bio')) updateData.bio = formData.get('bio') as string
+  if (formData.has('university')) updateData.university = formData.get('university') as string
+  if (formData.has('major')) updateData.major = formData.get('major') as string
+  if (formData.has('graduationYear')) {
+    const val = parseInt(formData.get('graduationYear') as string)
+    if (!isNaN(val)) updateData.graduation_year = val
+  }
+  if (formData.has('githubUrl')) updateData.github_url = formData.get('githubUrl') as string
+  if (formData.has('linkedinUrl')) updateData.linkedin_url = formData.get('linkedinUrl') as string
+  if (formData.has('portfolioUrl')) updateData.portfolio_url = formData.get('portfolioUrl') as string
+  if (formData.has('lookingFor')) updateData.looking_for = formData.get('lookingFor') as string
+  if (formData.has('proudProject')) updateData.proud_project = formData.get('proudProject') as string
+  if (formData.has('resumeUrl')) updateData.resume_url = formData.get('resumeUrl') as string
+
+  // Only include these if they're actually in the form (e.g., onboarding or settings page)
+  if (formData.has('availability')) updateData.availability = formData.getAll('availability') as string[]
+  if (formData.has('compensationPreference')) updateData.compensation_preference = formData.get('compensationPreference') as string
+  if (formData.has('willingToRelocate')) updateData.willing_to_relocate = formData.get('willingToRelocate') === 'true'
+  if (formData.has('requiresSponsorship')) updateData.requires_sponsorship = formData.get('requiresSponsorship') === 'true'
+  if (formData.has('preferredCompanySizes')) updateData.preferred_company_sizes = formData.getAll('preferredCompanySizes') as string[]
+  if (formData.has('jobFunctions')) updateData.job_functions = formData.getAll('jobFunctions') as string[]
+  if (formData.has('interestedRoles')) updateData.interested_roles = formData.getAll('interestedRoles') as string[]
 
   const { error } = await supabase
     .from('students')
-    .upsert({
-      id: user.id,
-      headline,
-      bio,
-      major,
-      graduation_year: graduationYear,
-      availability,
-      compensation_preference: compensationPreference,
-      willing_to_relocate: willingToRelocate,
-      requires_sponsorship: requiresSponsorship,
-      preferred_company_sizes: preferredCompanySizes,
-      github_url: githubUrl,
-      portfolio_url: portfolioUrl,
-      looking_for: lookingFor,
-      proud_project: proudProject,
-      job_functions: jobFunctions,
-      interested_roles: interestedRoles,
-    } as any)
+    .upsert(updateData as any)
 
   if (error) {
     return { error: error.message }
@@ -222,6 +219,7 @@ export async function completeOnboarding(data: {
     githubUrl: string
     lookingFor: string
     proudProject: string
+    resumeUrl: string
   }
   skillIds: string[]
   experiences: {
@@ -268,6 +266,7 @@ export async function completeOnboarding(data: {
       github_url: data.student.githubUrl,
       looking_for: data.student.lookingFor,
       proud_project: data.student.proudProject,
+      resume_url: data.student.resumeUrl,
     } as any)
 
   // Update skills
@@ -320,17 +319,29 @@ export async function completeOnboarding(data: {
 
   // Insert experiences
   if (data.experiences.length > 0) {
-    await supabase.from('experiences').insert(
+    // Normalize date values - month inputs give "YYYY-MM" but DATE column needs "YYYY-MM-DD"
+    const normalizeDate = (dateStr: string | null | undefined): string | null => {
+      if (!dateStr) return null
+      // If format is "YYYY-MM" (from month input), append "-01"
+      if (/^\d{4}-\d{2}$/.test(dateStr)) return `${dateStr}-01`
+      return dateStr
+    }
+
+    const { error: expError } = await supabase.from('experiences').insert(
       data.experiences.map(exp => ({
         student_id: user.id,
         company_name: exp.companyName,
         title: exp.title,
-        description: exp.description,
-        start_date: exp.startDate || null,
-        end_date: exp.isCurrent ? null : (exp.endDate || null),
+        description: exp.description || null,
+        start_date: normalizeDate(exp.startDate),
+        end_date: exp.isCurrent ? null : normalizeDate(exp.endDate),
         is_current: exp.isCurrent,
       })) as any
     )
+
+    if (expError) {
+      console.error('Error inserting experiences:', expError)
+    }
   }
 
   revalidatePath('/', 'layout')

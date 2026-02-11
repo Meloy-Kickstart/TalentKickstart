@@ -91,7 +91,7 @@ export default async function StudentApplicationsPage() {
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
-              <div className="text-2xl font-bold text-amber-400">{pendingApps.length}</div>
+              <div className="text-2xl font-bold text-amber-600">{pendingApps.length}</div>
               <p className="text-sm text-muted-foreground">Pending</p>
             </CardContent>
           </Card>

@@ -338,9 +338,10 @@ export default async function HomePage() {
             </div>
 
             <div className="flex gap-12 text-sm font-medium text-[#500000]/40">
-              {['Roles', 'Startups', 'Students', 'Contact'].map((link) => (
-                <Link key={link} href="#" className="hover:text-[#500000] transition-colors duration-300 uppercase tracking-widest text-xs">{link}</Link>
-              ))}
+              <Link href="/roles" className="hover:text-[#500000] transition-colors duration-300 uppercase tracking-widest text-xs">Roles</Link>
+              <Link href="/startups" className="hover:text-[#500000] transition-colors duration-300 uppercase tracking-widest text-xs">Startups</Link>
+              <Link href="/students" className="hover:text-[#500000] transition-colors duration-300 uppercase tracking-widest text-xs">Students</Link>
+              <Link href="https://meloykickstart.tech/" className="hover:text-[#500000] transition-colors duration-300 uppercase tracking-widest text-xs">Contact</Link>
             </div>
 
             <p className="text-xs text-[#500000]/30 font-mono">

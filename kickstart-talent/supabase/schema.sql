@@ -750,3 +750,34 @@ INSERT INTO public.skills (name, category) VALUES
   ('Presentation Skills', 'soft'),
   ('Time Management', 'soft')
 ON CONFLICT (name) DO NOTHING;
+
+-- ============================================
+-- STORAGE: Resumes Bucket
+-- ============================================
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('resumes', 'resumes', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Allow authenticated users to upload resumes
+CREATE POLICY "Authenticated users can upload resumes"
+ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK (bucket_id = 'resumes');
+
+-- Allow anyone to read resumes (public bucket)
+CREATE POLICY "Public read access for resumes"
+ON storage.objects FOR SELECT
+TO public
+USING (bucket_id = 'resumes');
+
+-- Allow users to update their own resumes
+CREATE POLICY "Users can update own resumes"
+ON storage.objects FOR UPDATE
+TO authenticated
+USING (bucket_id = 'resumes');
+
+-- Allow users to delete their own resumes
+CREATE POLICY "Users can delete own resumes"
+ON storage.objects FOR DELETE
+TO authenticated
+USING (bucket_id = 'resumes');
